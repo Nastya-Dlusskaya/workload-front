@@ -8,6 +8,8 @@ import Subject from "./subject/Subject";
 import Speciality from "./speciality/Speciality";
 import Faculty from "./faculty/Faculty";
 import Department from "./departmet/Department";
+import AcademicRank from "./academicRank/AcademicRank";
+import AcademicDegree from "./academicDegree/AcademicDegree";
 
 class MainRouter extends Component {
 
@@ -37,6 +39,8 @@ class MainRouter extends Component {
                         <Route path='/specialities' component={Speciality}/>
                         <Route path='/faculties' component={Faculty}/>
                         <Route path='/departments' component={Department}/>
+                        <Route path='/ranks' component={AcademicRank}/>
+                        <Route path='/degrees' component={AcademicDegree}/>
                         <Route path='/signOut' render={() => <SignOut changeAuthorizeStatus={this.changeAuthorizeStatus}/>}/>
                     </BrowserRouter>
                 </div>

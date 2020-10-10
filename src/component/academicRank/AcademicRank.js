@@ -1,82 +1,53 @@
 import React, {Component} from 'react';
 import axios from "axios/index";
-import {
-    BACK_END_SERVER_URL,
-    DEFAULT_L10N_LANGUAGE,
-    LOCAL_STORAGE_BASKET, LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN,
-    LOCAL_STORAGE_UI_LANGUAGE,
-    LOCAL_STORAGE_USER_DATA, ROLE_LIBRARIAN,
-    ROLE_OPERATOR,
-    URL_DOWNLOAD_FILE
-} from "../../context";
+import {BACK_END_SERVER_URL, LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN} from "../../context";
 import {Table, Modal, Button, Form, Icon} from "semantic-ui-react";
 
-class Department extends Component {
+class AcademicRank extends Component {
 
     state = {
-        departments: [],
-        faculties: [],
-        departmentName: '',
-        facultyId: null,
+        ranks: [],
+        rankName: '',
         id: null,
         open: false
     };
 
     componentWillMount() {
         axios
-            .get(BACK_END_SERVER_URL + `/departments`)
+            .get(BACK_END_SERVER_URL + `/academicRank`)
             .then(res => {
-                this.setState({departments: res.data});
+                console.log(res.data);
+                this.setState({ranks: res.data});
             })
             .catch(({response}) => {
                 if (response) this.setState({errorText: response.data.message});
             });
     }
 
-    componentDidMount() {
-        this.loadFaculties();
-    };
-
-    loadFaculties = () => {
-        axios
-            .get(BACK_END_SERVER_URL + `/faculties`)
-            .then(res => {
-                let array = [];
-                res.data.map(f => array.push({key: f.id, text: f.name, value: f.id}));
-                this.setState({faculties: array});
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    };
-
     addSubject = () => {
-        let url = this.state.id ? '/departments/' + this.state.id : '/departments';
+        let url = this.state.id ? '/academicRank/' + this.state.id : '/academicRank';
         let method = this.state.id ? 'put' : 'post';
         axios({
             method: method,
             url: BACK_END_SERVER_URL + url,
             headers: {
-                //  'Authorization': 'Bearer  ' + localStorage.getItem(LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN),
+                 'Authorization': 'Bearer  ' + localStorage.getItem(LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN),
                 'Content-type': 'application/json'
             },
             data: {
-                name: this.state.departmentName,
-                faculty: {
-                    id: this.state.facultyId,
-                }
+                name: this.state.rankName
             }
         })
             .then(res => {
-                if(this.state.id) {
-                    this.state.departments.find(s => s.id === this.state.id).name = res.data.name
+                if (this.state.id) {
+                    this.state.ranks.find(s => s.id === this.state.id).name = res.data.name
                 } else {
-                    this.state.departments.push(res.data);
+                    this.state.ranks.push(res.data);
                 }
                 this.setState({
                     open: false,
-                    facultyId: null,
-                    departmentName: ""
+                    id: null,
+                    rankName: ''
                 })
             })
             .catch(({response}) => {
@@ -84,24 +55,23 @@ class Department extends Component {
             });
     };
 
-    onUpdate = (department) => {
+    onUpdate = (subject) => {
         this.setState({
-            id: department.id,
-            departmentName: department.name,
-            facultyId: department.faculty.id,
+            id: subject.id,
+            rankName: subject.name,
             open: true
         })
     };
 
     onRemove = (id) => {
         axios
-            .delete(BACK_END_SERVER_URL + `/departments/${id}`, {
+            .delete(BACK_END_SERVER_URL + `/academicRank/${id}`, {
                 headers: {
                     //'Authorization': 'Bearer  ' + localStorage.getItem(LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN),
                 }
             })
             .then(res => {
-                this.setState({id: null, departments: this.state.departments.filter(s => s.id !== id)});
+                this.setState({id: null, rankName: '', ranks: this.state.ranks.filter(s => s.id !== id)});
             })
             .catch(({response}) => {
                 this.setState({removeErrorText: response.data.message});
@@ -109,11 +79,7 @@ class Department extends Component {
     };
 
     handleChangeName = (event, {value}) => {
-        this.setState({departmentName: value});
-    };
-
-    handleChangeFaculty = (event, {value}) => {
-        this.setState({facultyId : value});
+        this.setState({rankName: value});
     };
 
     render() {
@@ -123,24 +89,14 @@ class Department extends Component {
                     onClose={() => this.setState({open: false})}
                     onOpen={() => this.setState({open: true, id: null})}
                     open={this.state.open}
-                    trigger={<Button>Добавить кафедру</Button>}
+                    trigger={<Button>Добавить предмет</Button>}
                 >
-                    <Modal.Header>Добавить кафедру</Modal.Header>
+                    <Modal.Header>Добавить предмет</Modal.Header>
                     <Modal.Content>
                         <Modal.Description>
                             <Form>
                                 <Form.Input fluid label='Название' placeholder='Название' onChange={this.handleChangeName}
-                                            value={this.state.departmentName}/>
-                                <Form.Dropdown
-                                    fluid
-                                    search
-                                    selection
-                                    label='Факультет'
-                                    options={this.state.faculties}
-                                    defaultValue={this.state.facultyId}
-                                    onChange={this.handleChangeFaculty}
-                                    placeholder='Факультет'
-                                />
+                                            value={this.state.rankName}/>
                             </Form>
                         </Modal.Description>
                     </Modal.Content>
@@ -166,14 +122,15 @@ class Department extends Component {
                     </Table.Header>
 
                     <Table.Body>
-                        {Object.values(this.state.departments).map(
-                            (dep) => {
+                        {Object.values(this.state.ranks).map(
+                            (subject) => {
                                 return (
-                                    <Table.Row key={dep.id}>
-                                        <Table.Cell>{dep.id}</Table.Cell>
-                                        <Table.Cell>{dep.name}</Table.Cell>
-                                        <Table.Cell icon={<Icon name='edit'/>} onClick={() => this.onUpdate(dep)}/>
-                                        <Table.Cell icon={<Icon name='remove'/>} onClick={() => this.onRemove(dep.id)}/>
+                                    <Table.Row>
+                                        <Table.Cell icon={<Icon name='edit'/>} onClick={() => this.onUpdate(subject)}/>
+                                        <Table.Cell icon={<Icon name='remove'/>}
+                                                    onClick={() => this.onRemove(subject.id)}/>
+                                        <Table.Cell>{subject.id}</Table.Cell>
+                                        <Table.Cell>{subject.name}</Table.Cell>
                                     </Table.Row>
                                 );
                             }
@@ -185,4 +142,4 @@ class Department extends Component {
     }
 }
 
-export default Department
+export default AcademicRank

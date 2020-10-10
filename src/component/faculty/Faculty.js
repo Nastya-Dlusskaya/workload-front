@@ -24,7 +24,7 @@ class Faculty extends Component {
         axios
             .get(BACK_END_SERVER_URL + `/faculties`)
             .then(res => {
-                this.setState({specialities: res.data});
+                this.setState({faculties: res.data});
             })
             .catch(({response}) => {
                 if (response) this.setState({errorText: response.data.message});
@@ -51,7 +51,10 @@ class Faculty extends Component {
                 } else {
                     this.state.faculties.push(res.data);
                 }
-                this.setState({open: false})
+                this.setState({
+                    open: false,
+                    facultyName: ""
+                })
             })
             .catch(({response}) => {
                 this.setState({errorText: response.data.message});
@@ -61,7 +64,7 @@ class Faculty extends Component {
     onUpdate = (faculty) => {
         this.setState({
             id: faculty.id,
-            specialityName: faculty.name,
+            facultyName: faculty.name,
             open: true
         })
     }
@@ -126,13 +129,13 @@ class Faculty extends Component {
 
                     <Table.Body>
                         {Object.values(this.state.faculties).map(
-                            (subject) => {
+                            (faculty) => {
                                 return (
-                                    <Table.Row>
-                                        <Table.Cell icon={<Icon name='edit'/>} onClick={() => this.onUpdate(subject)}/>
-                                        <Table.Cell icon={<Icon name='remove'/>} onClick={() => this.onRemove(subject.id)}/>
-                                        <Table.Cell>{subject.id}</Table.Cell>
-                                        <Table.Cell>{subject.name}</Table.Cell>
+                                    <Table.Row key={faculty.id}>
+                                        <Table.Cell icon={<Icon name='edit'/>} onClick={() => this.onUpdate(faculty)}/>
+                                        <Table.Cell icon={<Icon name='remove'/>} onClick={() => this.onRemove(faculty.id)}/>
+                                        <Table.Cell>{faculty.id}</Table.Cell>
+                                        <Table.Cell>{faculty.name}</Table.Cell>
                                     </Table.Row>
                                 );
                             }

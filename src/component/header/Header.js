@@ -11,15 +11,17 @@ import {
     ROLE_OPERATOR
 } from "../../context";
 
-const SUBJECTS = 'subjects';
+const SUBJECTS = 'degrees';
 const SPECIALITIES = 'specialities';
 const FACULTIES = 'faculties';
 const DEPARTMENTS = 'departments';
+const RANKS = 'ranks';
+const DEGREES = 'degrees';
 
 const links = new Map([
     [SUBJECTS, {
-        name: 'subjects',
-        url: '/subjects',
+        name: 'degrees',
+        url: '/degrees',
         value: 'Subjects',
     }],
     [SPECIALITIES, {
@@ -36,6 +38,16 @@ const links = new Map([
         name: 'departments',
         url: '/departments',
         value: 'Departments',
+    }],
+    [RANKS, {
+        name: 'ranks',
+        url: '/ranks',
+        value: 'Ranks',
+    }],
+    [DEGREES, {
+        name: 'degrees',
+        url: '/degrees',
+        value: 'Degrees',
     }],
 ]);
 
@@ -106,6 +118,25 @@ class Header extends Component {
                                 onClick={this.handleItemClick}>
                                 Кафедры
                             </Menu.Item>
+
+                            <Menu.Item
+                                name={links.get(RANKS).name}
+                                active={this.state.activeItem === links.get(RANKS).name}
+                                as={Link}
+                                to={links.get(RANKS).url}
+                                onClick={this.handleItemClick}>
+                                RANKS
+                            </Menu.Item>
+                            <Menu.Item
+                                name={links.get(DEGREES).name}
+                                active={this.state.activeItem === links.get(DEGREES).name}
+                                as={Link}
+                                to={links.get(DEGREES).url}
+                                onClick={this.handleItemClick}>
+                                DEGREES
+                            </Menu.Item>
+
+
                             {/*{this.isHasRole(ROLE_JOURNALIST) || this.isHasRole(ROLE_LIBRARIAN)*/}
                             {/*|| this.isHasRole(ROLE_COURIER) || this.isHasRole(ROLE_OPERATOR)*/}
                             {/*|| this.isHasRole(ROLE_ADMIN) */}

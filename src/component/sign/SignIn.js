@@ -185,7 +185,7 @@ class SignIn extends Component {
                     }
                 )
                 .then(res => {
-                    localStorage.setItem(LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN, res.data.acces_token);
+                    localStorage.setItem(LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN, res.data.access_token);
                     localStorage.setItem(LOCAL_STORAGE_OAUTH2_REFRESH_TOKEN, res.data.refresh_token);
                     current.setState({expires_in: res.data.expires_in});
                     current.startRefreshCycle();
@@ -208,9 +208,10 @@ class SignIn extends Component {
     };
 
     isDisableButton = () => {
-        return this.isValidUsername().value &&
-            this.isValidPassword().value &&
-            this.wasChanged();
+        // return this.isValidUsername().value &&
+        //     this.isValidPassword().value &&
+        //     this.wasChanged();
+        return true;
     };
 
     render() {

@@ -8,8 +8,8 @@ export const LOCAL_STORAGE_BASKET = 'bookBasket';
 
 export const OAUTH2_GRANT_TYPE_PASSWORD = 'password';
 export const OAUTH2_GRANT_TYPE_REFRESH_TOKEN = 'refresh_token';
-export const OAUTH2_CLIENT_ID = 'devglan-client';
-export const OAUTH2_CLIENT_SECRET = 'devglan-secret';
+export const OAUTH2_CLIENT_ID = 'workload-client';
+export const OAUTH2_CLIENT_SECRET = 'workload-secret';
 
 export const DEFAULT_LANGUAGE = 'English';
 export const DEFAULT_L10N_LANGUAGE = 'enUS';

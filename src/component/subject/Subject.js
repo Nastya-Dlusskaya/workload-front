@@ -16,7 +16,7 @@ class Subject extends Component {
         axios
             .get(BACK_END_SERVER_URL + `/subjects`)
             .then(res => {
-                this.setState({subjects: res.data});
+                this.setState({degrees: res.data});
             })
             .catch(({response}) => {
                 if (response) this.setState({errorText: response.data.message});
@@ -25,7 +25,7 @@ class Subject extends Component {
 
     addSubject = () => {
         console.log('add')
-        let url = this.state.id ? '/subjects/' + this.state.id : '/subjects';
+        let url = this.state.id ? '/degrees/' + this.state.id : '/degrees';
         let method = this.state.id ? 'put' : 'post';
         axios({
             method: method,
@@ -54,7 +54,7 @@ class Subject extends Component {
     onUpdate = (subject) => {
         this.setState({
             id: subject.id,
-            subjectName: subject.name,
+            degreeName: subject.name,
             open: true
         })
     }
@@ -67,7 +67,7 @@ class Subject extends Component {
                 }
             })
             .then(res => {
-                this.setState({id: null, subjectName: '', subjects: this.state.subjects.filter(s => s.id !== id)});
+                this.setState({id: null, degreeName: '', degrees: this.state.subjects.filter(s => s.id !== id)});
             })
             .catch(({response}) => {
                 this.setState({removeErrorText: response.data.message});
@@ -75,7 +75,7 @@ class Subject extends Component {
     }
 
     handleChangeName = (event, {value}) => {
-        this.setState({subjectName: value});
+        this.setState({degreeName: value});
     };
 
     render() {
