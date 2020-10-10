@@ -5,6 +5,9 @@ import SignOut from "./sign/SignOut";
 import {LOCAL_STORAGE_USER_DATA} from "../context";
 import Header from "./header/Header.js";
 import Subject from "./subject/Subject";
+import Speciality from "./speciality/Speciality";
+import Faculty from "./faculty/Faculty";
+import Department from "./departmet/Department";
 
 class MainRouter extends Component {
 
@@ -31,9 +34,11 @@ class MainRouter extends Component {
                         <Header isAuthorize={this.state.isAuthorize}/>
                         <Route path='/signIn' render={() => <SignIn changeAuthorizeStatus={this.changeAuthorizeStatus}/>}/>
                         <Route path='/subjects' component={Subject}/>
+                        <Route path='/specialities' component={Speciality}/>
+                        <Route path='/faculties' component={Faculty}/>
+                        <Route path='/departments' component={Department}/>
                         <Route path='/signOut' render={() => <SignOut changeAuthorizeStatus={this.changeAuthorizeStatus}/>}/>
                     </BrowserRouter>
-
                 </div>
                 <Footer/>
             </div>

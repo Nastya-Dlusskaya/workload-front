@@ -1,22 +1,30 @@
 import React, {Component} from 'react';
 import axios from "axios/index";
-import { BACK_END_SERVER_URL } from "../../context";
+import {
+    BACK_END_SERVER_URL,
+    DEFAULT_L10N_LANGUAGE,
+    LOCAL_STORAGE_BASKET, LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN,
+    LOCAL_STORAGE_UI_LANGUAGE,
+    LOCAL_STORAGE_USER_DATA, ROLE_LIBRARIAN,
+    ROLE_OPERATOR,
+    URL_DOWNLOAD_FILE
+} from "../../context";
 import {Table, Modal, Button, Form, Icon} from "semantic-ui-react";
 
-class Subject extends Component {
+class Faculty extends Component {
 
     state = {
-        subjects: [],
-        subjectName: '',
+        faculties: [],
+        facultyName: '',
         id: null,
         open: false
     };
 
     componentWillMount() {
         axios
-            .get(BACK_END_SERVER_URL + `/subjects`)
+            .get(BACK_END_SERVER_URL + `/faculties`)
             .then(res => {
-                this.setState({subjects: res.data});
+                this.setState({specialities: res.data});
             })
             .catch(({response}) => {
                 if (response) this.setState({errorText: response.data.message});
@@ -24,8 +32,7 @@ class Subject extends Component {
     }
 
     addSubject = () => {
-        console.log('add')
-        let url = this.state.id ? '/subjects/' + this.state.id : '/subjects';
+        let url = this.state.id ? '/faculties/' + this.state.id : '/faculties';
         let method = this.state.id ? 'put' : 'post';
         axios({
             method: method,
@@ -35,14 +42,14 @@ class Subject extends Component {
                 'Content-type': 'application/json'
             },
             data: {
-                name: this.state.subjectName
+                name: this.state.facultyName
             }
         })
             .then(res => {
-                if (this.state.id) {
-                    this.state.subjects.find(s => s.id === this.state.id).name = res.data.name
+                if(this.state.id) {
+                    this.state.faculties.find(s => s.id === this.state.id).name = res.data.name
                 } else {
-                    this.state.subjects.push(res.data);
+                    this.state.faculties.push(res.data);
                 }
                 this.setState({open: false})
             })
@@ -51,23 +58,23 @@ class Subject extends Component {
             });
     }
 
-    onUpdate = (subject) => {
+    onUpdate = (faculty) => {
         this.setState({
-            id: subject.id,
-            subjectName: subject.name,
+            id: faculty.id,
+            specialityName: faculty.name,
             open: true
         })
     }
 
     onRemove = (id) => {
         axios
-            .delete(BACK_END_SERVER_URL + `/subjects/${id}`, {
+            .delete(BACK_END_SERVER_URL + `/faculties/${id}`, {
                 headers: {
                     //'Authorization': 'Bearer  ' + localStorage.getItem(LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN),
                 }
             })
             .then(res => {
-                this.setState({id: null, subjectName: '', subjects: this.state.subjects.filter(s => s.id !== id)});
+                this.setState({id: null, faculties: this.state.faculties.filter(s => s.id !== id)});
             })
             .catch(({response}) => {
                 this.setState({removeErrorText: response.data.message});
@@ -75,7 +82,7 @@ class Subject extends Component {
     }
 
     handleChangeName = (event, {value}) => {
-        this.setState({subjectName: value});
+        this.setState({facultyName: value});
     };
 
     render() {
@@ -85,14 +92,14 @@ class Subject extends Component {
                     onClose={() => this.setState({open: false})}
                     onOpen={() => this.setState({open: true, id: null})}
                     open={this.state.open}
-                    trigger={<Button>Добавить предмет</Button>}
+                    trigger={<Button>Добавить факультет</Button>}
                 >
-                    <Modal.Header>Добавить предмет</Modal.Header>
+                    <Modal.Header>Добавить факультет</Modal.Header>
                     <Modal.Content>
                         <Modal.Description>
                             <Form>
                                 <Form.Input fluid label='Название' placeholder='Название' onChange={this.handleChangeName}
-                                            value={this.state.subjectName}/>
+                                            value={this.state.facultyName}/>
                             </Form>
                         </Modal.Description>
                     </Modal.Content>
@@ -118,13 +125,12 @@ class Subject extends Component {
                     </Table.Header>
 
                     <Table.Body>
-                        {Object.values(this.state.subjects).map(
+                        {Object.values(this.state.faculties).map(
                             (subject) => {
                                 return (
                                     <Table.Row>
                                         <Table.Cell icon={<Icon name='edit'/>} onClick={() => this.onUpdate(subject)}/>
-                                        <Table.Cell icon={<Icon name='remove'/>}
-                                                    onClick={() => this.onRemove(subject.id)}/>
+                                        <Table.Cell icon={<Icon name='remove'/>} onClick={() => this.onRemove(subject.id)}/>
                                         <Table.Cell>{subject.id}</Table.Cell>
                                         <Table.Cell>{subject.name}</Table.Cell>
                                     </Table.Row>
@@ -138,4 +144,4 @@ class Subject extends Component {
     }
 }
 
-export default Subject
+export default Faculty

@@ -12,10 +12,9 @@ import {
 } from "../../context";
 
 const SUBJECTS = 'subjects';
-const NEWS = 'news';
-const CATALOG = 'catalog';
-const BASKET = 'basket';
-const ADMIN = 'admin';
+const SPECIALITIES = 'specialities';
+const FACULTIES = 'faculties';
+const DEPARTMENTS = 'departments';
 
 const links = new Map([
     [SUBJECTS, {
@@ -23,36 +22,34 @@ const links = new Map([
         url: '/subjects',
         value: 'Subjects',
     }],
-    [CATALOG, {
-        name: 'catalog',
-        url: '/catalog',
-        value: 'Catalog',
+    [SPECIALITIES, {
+        name: 'specialities',
+        url: '/specialities',
+        value: 'Specialities',
     }],
-    [BASKET, {
-        name: 'basket',
-        url: '/basket',
-        value: 'Basket',
+    [FACULTIES, {
+        name: 'faculties',
+        url: '/faculties',
+        value: 'Faculties',
     }],
-    [ADMIN, {
-        name: 'admin',
-        url: '/admin',
-        value: 'Admin',
+    [DEPARTMENTS, {
+        name: 'departments',
+        url: '/departments',
+        value: 'Departments',
     }],
 ]);
-
 
 class Header extends Component {
 
     state = {
         activeItem: 'home',
-        url: '/',
-        countInBasket: 0,
+        url: '/'
     };
 
     componentWillMount() {
         let url = window.location.pathname;
         Array.from(links.values()).forEach(value => {
-            if (value.name !== HOME && url.includes(value.url))
+            if (value.name !== SUBJECTS && url.includes(value.url))
                 this.setState({activeItem: value.name});
         });
     }
@@ -78,58 +75,40 @@ class Header extends Component {
                     <Menu secondary>
                         <Menu.Menu>
                             <Menu.Item
-                                name={links.get(HOME).name}
-                                active={this.state.activeItem === links.get(HOME).name}
+                                name={links.get(SUBJECTS).name}
+                                active={this.state.activeItem === links.get(SUBJECTS).name}
                                 as={Link}
-                                to={links.get(HOME).url}
+                                to={links.get(SUBJECTS).url}
                                 onClick={this.handleItemClick}>
-                                Home
+                                Предметы
                             </Menu.Item>
                             <Menu.Item
-                                name={links.get(NEWS).name}
-                                active={this.state.activeItem === links.get(NEWS).name}
+                                name={links.get(SPECIALITIES).name}
+                                active={this.state.activeItem === links.get(SPECIALITIES).name}
                                 as={Link}
-                                to={links.get(NEWS).url}
+                                to={links.get(SPECIALITIES).url}
                                 onClick={this.handleItemClick}>
-                                News
+                                Специальности
                             </Menu.Item>
                             <Menu.Item
-                                name={links.get(CATALOG).name}
-                                active={this.state.activeItem === links.get(CATALOG).name}
+                                name={links.get(FACULTIES).name}
+                                active={this.state.activeItem === links.get(FACULTIES).name}
                                 as={Link}
-                                to={links.get(CATALOG).url}
+                                to={links.get(FACULTIES).url}
                                 onClick={this.handleItemClick}>
-                                Catalog
+                                Факультеты
                             </Menu.Item>
                             <Menu.Item
-                                name={links.get(BASKET).name}
-                                active={this.state.activeItem === links.get(BASKET).name}
+                                name={links.get(DEPARTMENTS).name}
+                                active={this.state.activeItem === links.get(DEPARTMENTS).name}
                                 as={Link}
-                                to={links.get(BASKET).url}
+                                to={links.get(DEPARTMENTS).url}
                                 onClick={this.handleItemClick}>
-                                Basket
+                                Кафедры
                             </Menu.Item>
-                            {this.isHasRole(ROLE_JOURNALIST) || this.isHasRole(ROLE_LIBRARIAN)
-                            || this.isHasRole(ROLE_COURIER) || this.isHasRole(ROLE_OPERATOR)
-                            || this.isHasRole(ROLE_ADMIN) ?
-                                <Menu.Item
-                                    name={links.get(ADMIN).name}
-                                    active={this.state.activeItem === links.get(ADMIN).name}
-                                    as={Link}
-                                    to={links.get(ADMIN).url}
-                                    onClick={this.handleItemClick}>
-                                    'Admin'
-                                </Menu.Item> : false}
-                            <Menu.Menu position='right'>
-                                <Menu.Item
-                                    name={links.get(BASKET).name}
-                                    active={this.state.activeItem === links.get(BASKET).name}
-                                    as={Link}
-                                    to={links.get(BASKET).url}
-                                    onClick={this.handleItemClick}>
-                                    Sign Out
-                                </Menu.Item>
-                            </Menu.Menu>
+                            {/*{this.isHasRole(ROLE_JOURNALIST) || this.isHasRole(ROLE_LIBRARIAN)*/}
+                            {/*|| this.isHasRole(ROLE_COURIER) || this.isHasRole(ROLE_OPERATOR)*/}
+                            {/*|| this.isHasRole(ROLE_ADMIN) */}
                         </Menu.Menu>
                     </Menu>
                 </Container>
