@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import axios from "axios/index";
 import {BACK_END_SERVER_URL, LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN} from "../../context";
-import {Table, Modal, Button, Form, Icon} from "semantic-ui-react";
+import {Button, Form, Icon, Modal, Table} from "semantic-ui-react";
 
 class SimpleCRUD extends Component {
 
@@ -113,7 +113,7 @@ class SimpleCRUD extends Component {
                         />
                     </Modal.Actions>
                 </Modal>
-                <Table style={{marginTop: "5em"}} celled>
+                <Table celled>
                     <Table.Header fullWidth>
                         <Table.Row>
                             <Table.HeaderCell>Id</Table.HeaderCell>

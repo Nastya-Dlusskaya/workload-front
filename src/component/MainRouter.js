@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Route, BrowserRouter} from 'react-router-dom'
+import {BrowserRouter, Route} from 'react-router-dom'
 import SignIn from "./sign/SignIn";
 import SignOut from "./sign/SignOut";
 import {LOCAL_STORAGE_USER_DATA} from "../context";
@@ -10,6 +10,7 @@ import Faculty from "./faculty/Faculty";
 import Department from "./departmet/Department";
 import AcademicRank from "./academicRank/AcademicRank";
 import AcademicDegree from "./academicDegree/AcademicDegree";
+import Lecturer from "./lecturer/Lecturer";
 
 class MainRouter extends Component {
 
@@ -30,7 +31,7 @@ class MainRouter extends Component {
 
     render() {
         return (
-            <div style={{position: 'relative', minHeight: '100vh'}}>
+            <div style={{ minHeight: '100vh'}}>
                 <div style={{paddingBottom: '2.5rem'}}>
                     <BrowserRouter>
                         <Header isAuthorize={this.state.isAuthorize}/>
@@ -41,6 +42,7 @@ class MainRouter extends Component {
                         <Route path='/departments' component={Department}/>
                         <Route path='/ranks' component={AcademicRank}/>
                         <Route path='/degrees' component={AcademicDegree}/>
+                        <Route path='/lecturers' component={Lecturer}/>
                         <Route path='/signOut' render={() => <SignOut changeAuthorizeStatus={this.changeAuthorizeStatus}/>}/>
                     </BrowserRouter>
                 </div>

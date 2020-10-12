@@ -3,22 +3,22 @@ import axios from "axios/index";
 import {BACK_END_SERVER_URL} from "../../context";
 import {Button, Form, Icon, Modal, Table} from "semantic-ui-react";
 
-class Department extends Component {
+class Group extends Component {
 
     state = {
-        departments: [],
-        faculties: [],
-        departmentName: '',
-        facultyId: null,
+        groups: [],
+        groupName: '',
+        studentCount: null,
+        specialityId: null,
         id: null,
         open: false
     };
 
     componentWillMount() {
         axios
-            .get(BACK_END_SERVER_URL + `/departments`)
+            .get(BACK_END_SERVER_URL + `/groups`)
             .then(res => {
-                this.setState({departments: res.data});
+                this.setState({groups: res.data});
             })
             .catch(({response}) => {
                 if (response) this.setState({errorText: response.data.message});
@@ -26,12 +26,12 @@ class Department extends Component {
     }
 
     componentDidMount() {
-        this.loadFaculties();
+        this.loadSpecialities();
     };
 
-    loadFaculties = () => {
+    loadSpecialities = () => {
         axios
-            .get(BACK_END_SERVER_URL + `/faculties`)
+            .get(BACK_END_SERVER_URL + `/specialities`)
             .then(res => {
                 let array = [];
                 res.data.map(f => array.push({key: f.id, text: f.name, value: f.id}));
@@ -43,7 +43,7 @@ class Department extends Component {
     };
 
     addSubject = () => {
-        let url = this.state.id ? '/departments/' + this.state.id : '/departments';
+        let url = this.state.id ? '/groups/' + this.state.id : '/groups';
         let method = this.state.id ? 'put' : 'post';
         axios({
             method: method,
@@ -53,22 +53,24 @@ class Department extends Component {
                 'Content-type': 'application/json'
             },
             data: {
-                name: this.state.departmentName,
-                faculty: {
-                    id: this.state.facultyId,
+                name: this.state.groupName,
+                studentCount: this.state.studentCount,
+                speciality: {
+                    id: this.state.specialityId,
                 }
             }
         })
             .then(res => {
                 if(this.state.id) {
-                    this.state.departments.find(s => s.id === this.state.id).name = res.data.name
+                    this.state.groups.find(s => s.id === this.state.id).name = res.data.name
                 } else {
-                    this.state.departments.push(res.data);
+                    this.state.groups.push(res.data);
                 }
                 this.setState({
                     open: false,
-                    facultyId: null,
-                    departmentName: ""
+                    studentCount: null,
+                    specialityId: null,
+                    name: ""
                 })
             })
             .catch(({response}) => {
@@ -76,24 +78,25 @@ class Department extends Component {
             });
     };
 
-    onUpdate = (department) => {
+    onUpdate = (group) => {
         this.setState({
-            id: department.id,
-            departmentName: department.name,
-            facultyId: department.faculty.id,
+            id: group.id,
+            groupName: group.name,
+            studentCount: group.studentCount,
+            specialityId: group.speciality.id,
             open: true
         })
     };
 
     onRemove = (id) => {
         axios
-            .delete(BACK_END_SERVER_URL + `/departments/${id}`, {
+            .delete(BACK_END_SERVER_URL + `/groups/${id}`, {
                 headers: {
                     //'Authorization': 'Bearer  ' + localStorage.getItem(LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN),
                 }
             })
             .then(res => {
-                this.setState({id: null, departments: this.state.departments.filter(s => s.id !== id)});
+                this.setState({id: null, groups: this.state.groups.filter(s => s.id !== id)});
             })
             .catch(({response}) => {
                 this.setState({removeErrorText: response.data.message});
@@ -101,7 +104,7 @@ class Department extends Component {
     };
 
     handleChangeName = (event, {value}) => {
-        this.setState({departmentName: value});
+        this.setState({groupName: value});
     };
 
     handleChangeFaculty = (event, {value}) => {
@@ -122,7 +125,7 @@ class Department extends Component {
                         <Modal.Description>
                             <Form>
                                 <Form.Input fluid label='Название' placeholder='Название' onChange={this.handleChangeName}
-                                            value={this.state.departmentName}/>
+                                            value={this.state.groupName}/>
                                 <Form.Dropdown
                                     fluid
                                     search
@@ -158,7 +161,7 @@ class Department extends Component {
                     </Table.Header>
 
                     <Table.Body>
-                        {Object.values(this.state.departments).map(
+                        {Object.values(this.state.groups).map(
                             (dep) => {
                                 return (
                                     <Table.Row key={dep.id}>
@@ -177,4 +180,4 @@ class Department extends Component {
     }
 }
 
-export default Department
+export default Group

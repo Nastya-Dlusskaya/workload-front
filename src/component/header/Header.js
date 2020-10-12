@@ -1,27 +1,20 @@
 import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import {Container, Menu} from "semantic-ui-react";
-import {
-    LOCAL_STORAGE_BASKET,
-    LOCAL_STORAGE_USER_DATA,
-    ROLE_ADMIN,
-    ROLE_COURIER,
-    ROLE_JOURNALIST,
-    ROLE_LIBRARIAN,
-    ROLE_OPERATOR
-} from "../../context";
+import {LOCAL_STORAGE_USER_DATA, ROLE_ADMIN} from "../../context";
 
-const SUBJECTS = 'degrees';
+const SUBJECTS = 'subjects';
 const SPECIALITIES = 'specialities';
 const FACULTIES = 'faculties';
 const DEPARTMENTS = 'departments';
 const RANKS = 'ranks';
 const DEGREES = 'degrees';
+const LECTURERS = 'lecturers';
 
 const links = new Map([
     [SUBJECTS, {
-        name: 'degrees',
-        url: '/degrees',
+        name: 'subjects',
+        url: '/subjects',
         value: 'Subjects',
     }],
     [SPECIALITIES, {
@@ -48,6 +41,11 @@ const links = new Map([
         name: 'degrees',
         url: '/degrees',
         value: 'Degrees',
+    }],
+    [LECTURERS, {
+        name: 'lecturers',
+        url: '/lecturers',
+        value: 'Lecturers',
     }],
 ]);
 
@@ -86,6 +84,7 @@ class Header extends Component {
                 <Container>
                     <Menu secondary>
                         <Menu.Menu>
+                            {this.isHasRole(ROLE_ADMIN) ?
                             <Menu.Item
                                 name={links.get(SUBJECTS).name}
                                 active={this.state.activeItem === links.get(SUBJECTS).name}
@@ -94,6 +93,8 @@ class Header extends Component {
                                 onClick={this.handleItemClick}>
                                 Предметы
                             </Menu.Item>
+                            : false}
+                            {this.isHasRole(ROLE_ADMIN) ?
                             <Menu.Item
                                 name={links.get(SPECIALITIES).name}
                                 active={this.state.activeItem === links.get(SPECIALITIES).name}
@@ -102,6 +103,8 @@ class Header extends Component {
                                 onClick={this.handleItemClick}>
                                 Специальности
                             </Menu.Item>
+                            : false}
+                            {this.isHasRole(ROLE_ADMIN) ?
                             <Menu.Item
                                 name={links.get(FACULTIES).name}
                                 active={this.state.activeItem === links.get(FACULTIES).name}
@@ -110,6 +113,8 @@ class Header extends Component {
                                 onClick={this.handleItemClick}>
                                 Факультеты
                             </Menu.Item>
+                            : false}
+                            {this.isHasRole(ROLE_ADMIN) ?
                             <Menu.Item
                                 name={links.get(DEPARTMENTS).name}
                                 active={this.state.activeItem === links.get(DEPARTMENTS).name}
@@ -118,25 +123,37 @@ class Header extends Component {
                                 onClick={this.handleItemClick}>
                                 Кафедры
                             </Menu.Item>
-
+                            : false}
+                            {this.isHasRole(ROLE_ADMIN) ?
                             <Menu.Item
                                 name={links.get(RANKS).name}
                                 active={this.state.activeItem === links.get(RANKS).name}
                                 as={Link}
                                 to={links.get(RANKS).url}
                                 onClick={this.handleItemClick}>
-                                RANKS
+                                Ученое звание
                             </Menu.Item>
+                            : false}
+                            {this.isHasRole(ROLE_ADMIN) ?
                             <Menu.Item
                                 name={links.get(DEGREES).name}
                                 active={this.state.activeItem === links.get(DEGREES).name}
                                 as={Link}
                                 to={links.get(DEGREES).url}
                                 onClick={this.handleItemClick}>
-                                DEGREES
+                                Ученая степень
                             </Menu.Item>
-
-
+                            : false}
+                            {this.isHasRole(ROLE_ADMIN) ?
+                            <Menu.Item
+                                name={links.get(LECTURERS).name}
+                                active={this.state.activeItem === links.get(LECTURERS).name}
+                                as={Link}
+                                to={links.get(LECTURERS).url}
+                                onClick={this.handleItemClick}>
+                                Преподаватели
+                            </Menu.Item>
+                            : false}
                             {/*{this.isHasRole(ROLE_JOURNALIST) || this.isHasRole(ROLE_LIBRARIAN)*/}
                             {/*|| this.isHasRole(ROLE_COURIER) || this.isHasRole(ROLE_OPERATOR)*/}
                             {/*|| this.isHasRole(ROLE_ADMIN) */}
