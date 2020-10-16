@@ -3,23 +3,22 @@ import axios from "axios/index";
 import {BACK_END_SERVER_URL} from "../../context";
 import {Button, Form, Icon, Modal, Table} from "semantic-ui-react";
 
-class Group extends Component {
+class Workload extends Component {
 
     state = {
-        groups: [],
-        groupName: '',
-        studentCount: null,
-        specialityId: null,
-        specialities: [],
+        departments: [],
+        faculties: [],
+        departmentName: '',
+        facultyId: null,
         id: null,
         open: false
     };
 
     componentWillMount() {
         axios
-            .get(BACK_END_SERVER_URL + `/groups`)
+            .get(BACK_END_SERVER_URL + `/departments`)
             .then(res => {
-                this.setState({groups: res.data});
+                this.setState({departments: res.data});
             })
             .catch(({response}) => {
                 if (response) this.setState({errorText: response.data.message});
@@ -27,16 +26,16 @@ class Group extends Component {
     }
 
     componentDidMount() {
-        this.loadSpecialities();
+        this.loadFaculties();
     };
 
-    loadSpecialities = () => {
+    loadFaculties = () => {
         axios
-            .get(BACK_END_SERVER_URL + `/specialities`)
+            .get(BACK_END_SERVER_URL + `/faculties`)
             .then(res => {
                 let array = [];
                 res.data.map(f => array.push({key: f.id, text: f.name, value: f.id}));
-                this.setState({specialities: array});
+                this.setState({faculties: array});
             })
             .catch(function (error) {
                 console.log(error);
@@ -44,7 +43,7 @@ class Group extends Component {
     };
 
     addSubject = () => {
-        let url = this.state.id ? '/groups/' + this.state.id : '/groups';
+        let url = this.state.id ? '/departments/' + this.state.id : '/departments';
         let method = this.state.id ? 'put' : 'post';
         axios({
             method: method,
@@ -54,24 +53,22 @@ class Group extends Component {
                 'Content-type': 'application/json'
             },
             data: {
-                name: this.state.groupName,
-                studentCount: this.state.studentCount,
-                speciality: {
-                    id: this.state.specialityId,
+                name: this.state.departmentName,
+                faculty: {
+                    id: this.state.facultyId,
                 }
             }
         })
             .then(res => {
                 if(this.state.id) {
-                    this.state.groups.find(s => s.id === this.state.id).name = res.data.name
+                    this.state.departments.find(s => s.id === this.state.id).name = res.data.name
                 } else {
-                    this.state.groups.push(res.data);
+                    this.state.departments.push(res.data);
                 }
                 this.setState({
                     open: false,
-                    studentCount: null,
-                    specialityId: null,
-                    name: ""
+                    facultyId: null,
+                    departmentName: ""
                 })
             })
             .catch(({response}) => {
@@ -79,25 +76,24 @@ class Group extends Component {
             });
     };
 
-    onUpdate = (group) => {
+    onUpdate = (department) => {
         this.setState({
-            id: group.id,
-            groupName: group.name,
-            studentCount: group.studentCount,
-            specialityId: group.speciality.id,
+            id: department.id,
+            departmentName: department.name,
+            facultyId: department.faculty.id,
             open: true
         })
     };
 
     onRemove = (id) => {
         axios
-            .delete(BACK_END_SERVER_URL + `/groups/${id}`, {
+            .delete(BACK_END_SERVER_URL + `/departments/${id}`, {
                 headers: {
                     //'Authorization': 'Bearer  ' + localStorage.getItem(LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN),
                 }
             })
             .then(res => {
-                this.setState({id: null, groups: this.state.groups.filter(s => s.id !== id)});
+                this.setState({id: null, departments: this.state.departments.filter(s => s.id !== id)});
             })
             .catch(({response}) => {
                 this.setState({removeErrorText: response.data.message});
@@ -105,15 +101,11 @@ class Group extends Component {
     };
 
     handleChangeName = (event, {value}) => {
-        this.setState({groupName: value});
+        this.setState({departmentName: value});
     };
 
-    handleChangeStudentCount = (event, {value}) => {
-        this.setState({studentCount: value});
-    };
-
-    handleChangeSpeciality = (event, {value}) => {
-        this.setState({specialityId : value});
+    handleChangeFaculty = (event, {value}) => {
+        this.setState({facultyId : value});
     };
 
     render() {
@@ -123,25 +115,23 @@ class Group extends Component {
                     onClose={() => this.setState({open: false})}
                     onOpen={() => this.setState({open: true, id: null})}
                     open={this.state.open}
-                    trigger={<Button>Добавить группу</Button>}
+                    trigger={<Button>Добавить нагрузку</Button>}
                 >
-                    <Modal.Header>Добавить группу</Modal.Header>
+                    <Modal.Header>Добавить кафедру</Modal.Header>
                     <Modal.Content>
                         <Modal.Description>
                             <Form>
                                 <Form.Input fluid label='Название' placeholder='Название' onChange={this.handleChangeName}
-                                            value={this.state.groupName}/>
-                                <Form.Input fluid label='Количество студентов' placeholder='Количество студентов' onChange={this.handleChangeStudentCount}
-                                            value={this.state.studentCount} type="number" min="1" max='50'/>
+                                            value={this.state.departmentName}/>
                                 <Form.Dropdown
                                     fluid
                                     search
                                     selection
-                                    label='Специальность'
-                                    options={this.state.specialities}
-                                    defaultValue={this.state.specialityId}
-                                    onChange={this.handleChangeSpeciality}
-                                    placeholder='Специальность'
+                                    label='Тип работ'
+                                    options={this.state.faculties}
+                                    defaultValue={this.state.facultyId}
+                                    onChange={this.handleChangeFaculty}
+                                    placeholder='Факультет'
                                 />
                             </Form>
                         </Modal.Description>
@@ -164,13 +154,12 @@ class Group extends Component {
                             <Table.HeaderCell>Удалить</Table.HeaderCell>
                             <Table.HeaderCell>Id</Table.HeaderCell>
                             <Table.HeaderCell>Название</Table.HeaderCell>
-                            <Table.HeaderCell>Количество студентов</Table.HeaderCell>
-                            <Table.HeaderCell>Специальность</Table.HeaderCell>
+                            <Table.HeaderCell>Факультет</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
 
                     <Table.Body>
-                        {Object.values(this.state.groups).map(
+                        {Object.values(this.state.departments).map(
                             (dep) => {
                                 return (
                                     <Table.Row key={dep.id}>
@@ -178,8 +167,7 @@ class Group extends Component {
                                         <Table.Cell icon={<Icon name='remove'/>} onClick={() => this.onRemove(dep.id)}/>
                                         <Table.Cell>{dep.id}</Table.Cell>
                                         <Table.Cell>{dep.name}</Table.Cell>
-                                        <Table.Cell>{dep.studentCount}</Table.Cell>
-                                        <Table.Cell>{dep.speciality.name}</Table.Cell>
+                                        <Table.Cell>{dep.faculty.name}</Table.Cell>
                                     </Table.Row>
                                 );
                             }
@@ -191,4 +179,4 @@ class Group extends Component {
     }
 }
 
-export default Group
+export default Workload

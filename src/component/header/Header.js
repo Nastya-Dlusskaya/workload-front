@@ -10,6 +10,7 @@ const DEPARTMENTS = 'departments';
 const RANKS = 'ranks';
 const DEGREES = 'degrees';
 const LECTURERS = 'lecturers';
+const GROUPS = 'groups';
 
 const links = new Map([
     [SUBJECTS, {
@@ -46,6 +47,11 @@ const links = new Map([
         name: 'lecturers',
         url: '/lecturers',
         value: 'Lecturers',
+    }],
+    [GROUPS, {
+        name: 'groups',
+        url: '/groups',
+        value: 'Groups',
     }],
 ]);
 
@@ -154,6 +160,16 @@ class Header extends Component {
                                 Преподаватели
                             </Menu.Item>
                             : false}
+                            {this.isHasRole(ROLE_ADMIN) ?
+                                <Menu.Item
+                                    name={links.get(GROUPS).name}
+                                    active={this.state.activeItem === links.get(GROUPS).name}
+                                    as={Link}
+                                    to={links.get(GROUPS).url}
+                                    onClick={this.handleItemClick}>
+                                    Группы
+                                </Menu.Item>
+                                : false}
                             {/*{this.isHasRole(ROLE_JOURNALIST) || this.isHasRole(ROLE_LIBRARIAN)*/}
                             {/*|| this.isHasRole(ROLE_COURIER) || this.isHasRole(ROLE_OPERATOR)*/}
                             {/*|| this.isHasRole(ROLE_ADMIN) */}

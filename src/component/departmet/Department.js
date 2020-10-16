@@ -154,6 +154,7 @@ class Department extends Component {
                             <Table.HeaderCell>Удалить</Table.HeaderCell>
                             <Table.HeaderCell>Id</Table.HeaderCell>
                             <Table.HeaderCell>Название</Table.HeaderCell>
+                            <Table.HeaderCell>Факультет</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
 
@@ -162,10 +163,11 @@ class Department extends Component {
                             (dep) => {
                                 return (
                                     <Table.Row key={dep.id}>
-                                        <Table.Cell>{dep.id}</Table.Cell>
-                                        <Table.Cell>{dep.name}</Table.Cell>
                                         <Table.Cell icon={<Icon name='edit'/>} onClick={() => this.onUpdate(dep)}/>
                                         <Table.Cell icon={<Icon name='remove'/>} onClick={() => this.onRemove(dep.id)}/>
+                                        <Table.Cell>{dep.id}</Table.Cell>
+                                        <Table.Cell>{dep.name}</Table.Cell>
+                                        <Table.Cell>{dep.faculty.name}</Table.Cell>
                                     </Table.Row>
                                 );
                             }

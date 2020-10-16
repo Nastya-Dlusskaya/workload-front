@@ -11,6 +11,7 @@ import Department from "./departmet/Department";
 import AcademicRank from "./academicRank/AcademicRank";
 import AcademicDegree from "./academicDegree/AcademicDegree";
 import Lecturer from "./lecturer/Lecturer";
+import Group from "./group/Group";
 
 class MainRouter extends Component {
 
@@ -43,6 +44,7 @@ class MainRouter extends Component {
                         <Route path='/ranks' component={AcademicRank}/>
                         <Route path='/degrees' component={AcademicDegree}/>
                         <Route path='/lecturers' component={Lecturer}/>
+                        <Route path='/groups' component={Group}/>
                         <Route path='/signOut' render={() => <SignOut changeAuthorizeStatus={this.changeAuthorizeStatus}/>}/>
                     </BrowserRouter>
                 </div>

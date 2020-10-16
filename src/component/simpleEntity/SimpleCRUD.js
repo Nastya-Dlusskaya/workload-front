@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import axios from "axios/index";
 import {BACK_END_SERVER_URL, LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN} from "../../context";
-import {Button, Form, Icon, Modal, Table} from "semantic-ui-react";
+import {Button, Form, Icon, Input, Modal, Table} from "semantic-ui-react";
 
 class SimpleCRUD extends Component {
 
@@ -97,7 +97,7 @@ class SimpleCRUD extends Component {
                     <Modal.Content>
                         <Modal.Description>
                             <Form>
-                                <Form.Input fluid label='Название' placeholder='Название' onChange={this.handleChangeName}
+                                <Form.Field control={Input} fluid label='Название' placeholder='Название' onChange={this.handleChangeName}
                                             value={this.state.name}/>
                             </Form>
                         </Modal.Description>
