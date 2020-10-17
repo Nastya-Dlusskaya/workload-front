@@ -1,16 +1,12 @@
-import React, {Component} from 'react';
+import React, { Component } from "react";
 import SimpleCRUD from "../simpleEntity/SimpleCRUD";
 
 class Speciality extends Component {
-
-    render() {
-        return (
-            <SimpleCRUD
-                url='specialities'
-                buttonName='Добавить Специальность'
-            />
-        );
-    }
+  render() {
+    return (
+      <SimpleCRUD url="specialities" buttonName="Добавить Специальность" />
+    );
+  }
 }
 
-export default Speciality
+export default Speciality;

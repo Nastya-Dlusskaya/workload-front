@@ -1,16 +1,17 @@
-import React, {Component} from 'react';
+import React, { Component } from "react";
 import SimpleCRUD from "../simpleEntity/SimpleCRUD";
 
 class Subject extends Component {
-
-    render() {
-        return (
-            <SimpleCRUD
-                url='subjects'
-                buttonName='Добавить Предмет'
-            />
-        );
-    }
+  render() {
+    return (
+      <SimpleCRUD
+        location={this.props.location}
+        history={this.props.history}
+        url="subjects"
+        buttonName="Добавить Предмет"
+      />
+    );
+  }
 }
 
-export default Subject
+export default Subject;
