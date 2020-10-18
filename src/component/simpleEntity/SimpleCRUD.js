@@ -1,22 +1,13 @@
 import React, { Component } from "react";
 import axios from "axios/index";
-import queryString from "query-string/index";
 import {
   BACK_END_SERVER_URL,
   LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN,
 } from "../../context";
-import {
-  Button,
-  Dropdown,
-  Icon,
-  Modal,
-  Pagination,
-  Table,
-} from "semantic-ui-react";
+import { Button, Icon, Modal, Table } from "semantic-ui-react";
 
 import { Form, Input } from "semantic-ui-react-form-validator";
-
-const START_SIZE = 10;
+import Pagin from "./Pagin";
 
 class SimpleCRUD extends Component {
   static defaultProps = {
@@ -30,63 +21,17 @@ class SimpleCRUD extends Component {
 
     sizeList: [],
 
-    page: 1,
-    size: START_SIZE,
-    sort: ["name,DESC"],
     totalPages: 1,
   };
 
-  componentWillMount() {
-    this.loadSizeList();
-    if (this.props.location.search) {
-      const params = queryString.parse(this.props.location?.search);
-      this.setState(
-        {
-          page: params.page || this.state.page,
-          size: params.size || this.state.size,
-          sort: !params.sort
-            ? this.state.sort
-            : Array.isArray(params.sort)
-            ? params.sort
-            : Array.of(params.sort),
-        },
-        () => {
-          this.loadList();
-        }
-      );
-    } else {
-      this.loadList();
-    }
-  }
-
-  changeUrl = () => {
-    console.log(this.state);
-    const params = {
-      page: this.state.page,
-      size: this.state.size,
-      sort: this.state.sort,
-    };
-    this.props.history.push({ search: queryString.stringify(params) });
-    console.log(this.state);
-  };
-
-  loadList = () => {
-    let params = new URLSearchParams();
-    params.append("page", (this.state.page - 1).toString());
-    params.append("size", this.state.size.toString());
-    this.state.sort.forEach((i) => params.append("sort", i));
+  loadList = (params) => {
     axios
       .get(BACK_END_SERVER_URL + `/${this.props.url}/page`, { params: params })
       .then((res) => {
-        this.setState(
-          {
-            list: res.data.content,
-            page: res.data.number + 1,
-            totalPages: res.data.totalPages,
-            size: res.data.size,
-          },
-          this.changeUrl
-        );
+        this.setState({
+          list: res.data.content,
+          totalPages: res.data.totalPages,
+        });
       })
       .catch(({ response }) => {
         if (response) this.setState({ errorText: response.data.message });
@@ -159,24 +104,6 @@ class SimpleCRUD extends Component {
 
   handleChangeName = (event, { value }) => {
     this.setState({ name: value });
-  };
-
-  handleChangeSize = (event, { value }) => {
-    this.setState({ size: value, page: 1 }, this.loadList);
-  };
-
-  handlePaginationChange = (event, { activePage }) => {
-    this.setState({ page: activePage }, this.loadList);
-  };
-
-  loadSizeList = () => {
-    let min = START_SIZE;
-    let attay = [];
-    for (let i = 0; i < 4; i++) {
-      let value = i * START_SIZE + min;
-      attay.push({ key: value, text: value, value: value });
-    }
-    return attay;
   };
 
   render() {
@@ -265,33 +192,12 @@ class SimpleCRUD extends Component {
             })}
           </Table.Body>
         </Table>
-        <div style={{ alignSelf: "flex-end" }}>
-          <Pagination
-            activePage={this.state.page}
-            onPageChange={this.handlePaginationChange}
-            boundaryRange={2}
-            size="small"
-            siblingRange={1}
-            totalPages={this.state.totalPages || 1}
-            firstItem={{
-              content: <Icon name="angle double left" />,
-              icon: true,
-            }}
-            lastItem={{
-              content: <Icon name="angle double right" />,
-              icon: true,
-            }}
-            prevItem={{ content: <Icon name="angle left" />, icon: true }}
-            nextItem={{ content: <Icon name="angle right" />, icon: true }}
-          />
-          <Dropdown
-            onChange={this.handleChangeSize}
-            options={this.loadSizeList()}
-            placeholder="size"
-            selection
-            value={this.state.size}
-          />
-        </div>
+        <Pagin
+          loadList={this.loadList}
+          location={this.props.location}
+          totalPages={this.state.totalPages}
+          history={this.props.history}
+        />
       </div>
     );
   }

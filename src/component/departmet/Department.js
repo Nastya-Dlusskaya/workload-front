@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios/index";
 import { BACK_END_SERVER_URL } from "../../context";
 import { Button, Form, Icon, Modal, Table } from "semantic-ui-react";
+import Pagin from "../simpleEntity/Pagin";
 
 class Department extends Component {
   state = {
@@ -11,18 +12,23 @@ class Department extends Component {
     facultyId: null,
     id: null,
     open: false,
+
+    totalPages: 1,
   };
 
-  componentWillMount() {
+  loadList = (params) => {
     axios
-      .get(BACK_END_SERVER_URL + `/departments`)
+      .get(BACK_END_SERVER_URL + `/departments/page`, { params: params })
       .then((res) => {
-        this.setState({ departments: res.data });
+        this.setState({
+          departments: res.data.content,
+          totalPages: res.data.totalPages,
+        });
       })
       .catch(({ response }) => {
         if (response) this.setState({ errorText: response.data.message });
       });
-  }
+  };
 
   componentDidMount() {
     this.loadFaculties();
@@ -192,6 +198,12 @@ class Department extends Component {
             })}
           </Table.Body>
         </Table>
+        <Pagin
+          loadList={this.loadList}
+          location={this.props.location}
+          totalPages={this.state.totalPages}
+          history={this.props.history}
+        />
       </div>
     );
   }

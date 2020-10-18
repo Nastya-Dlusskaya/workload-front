@@ -236,7 +236,7 @@ class SignIn extends Component {
   render() {
     return (
       <Container id="signIn">
-        <SegmentGroup placeholder>
+        <SegmentGroup>
           <Grid columns={2} relaxed="very" stackable>
             <Grid.Column>
               {this.state.errorMsg ? (

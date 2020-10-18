@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios/index";
 import { BACK_END_SERVER_URL } from "../../context";
 import { Button, Form, Icon, Modal, Table } from "semantic-ui-react";
+import Pagin from "../simpleEntity/Pagin";
 
 class Group extends Component {
   state = {
@@ -12,18 +13,23 @@ class Group extends Component {
     specialities: [],
     id: null,
     open: false,
+
+    totalPages: 1,
   };
 
-  componentWillMount() {
+  loadList = (params) => {
     axios
-      .get(BACK_END_SERVER_URL + `/groups`)
+      .get(BACK_END_SERVER_URL + `/groups/page`, { params: params })
       .then((res) => {
-        this.setState({ groups: res.data });
+        this.setState({
+          groups: res.data.content,
+          totalPages: res.data.totalPages,
+        });
       })
       .catch(({ response }) => {
         if (response) this.setState({ errorText: response.data.message });
       });
-  }
+  };
 
   componentDidMount() {
     this.loadSpecialities();
@@ -212,6 +218,12 @@ class Group extends Component {
             })}
           </Table.Body>
         </Table>
+        <Pagin
+          loadList={this.loadList}
+          location={this.props.location}
+          totalPages={this.state.totalPages}
+          history={this.props.history}
+        />
       </div>
     );
   }

@@ -3,7 +3,14 @@ import SimpleCRUD from "../simpleEntity/SimpleCRUD";
 
 class Faculty extends Component {
   render() {
-    return <SimpleCRUD url="faculties" buttonName="Добавить факультет" />;
+    return (
+      <SimpleCRUD
+        location={this.props.location}
+        history={this.props.history}
+        url="faculties"
+        buttonName="Добавить факультет"
+      />
+    );
   }
 }
 

@@ -3,7 +3,14 @@ import SimpleCRUD from "../simpleEntity/SimpleCRUD";
 
 class AcademicRank extends Component {
   render() {
-    return <SimpleCRUD url="academicRank" buttonName="Добавить Ранг" />;
+    return (
+      <SimpleCRUD
+        location={this.props.location}
+        history={this.props.history}
+        url="academicRank"
+        buttonName="Добавить Ранг"
+      />
+    );
   }
 }
 

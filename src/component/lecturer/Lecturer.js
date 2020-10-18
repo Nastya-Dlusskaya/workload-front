@@ -5,6 +5,7 @@ import {
   LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN,
 } from "../../context";
 import { Button, Form, Icon, Modal, Table } from "semantic-ui-react";
+import Pagin from "../simpleEntity/Pagin";
 
 class Lecturer extends Component {
   state = {
@@ -19,18 +20,23 @@ class Lecturer extends Component {
     degreeId: null,
     id: null,
     open: false,
+
+    totalPages: 1,
   };
 
-  componentWillMount() {
+  loadList = (params) => {
     axios
-      .get(BACK_END_SERVER_URL + `/lecturers`)
+      .get(BACK_END_SERVER_URL + `/lecturers/page`, { params: params })
       .then((res) => {
-        this.setState({ lecturers: res.data });
+        this.setState({
+          lecturers: res.data.content,
+          totalPages: res.data.totalPages,
+        });
       })
       .catch(({ response }) => {
         if (response) this.setState({ errorText: response.data.message });
       });
-  }
+  };
 
   componentDidMount() {
     this.loadDegrees();
@@ -287,6 +293,12 @@ class Lecturer extends Component {
             })}
           </Table.Body>
         </Table>
+        <Pagin
+          loadList={this.loadList}
+          location={this.props.location}
+          totalPages={this.state.totalPages}
+          history={this.props.history}
+        />
       </div>
     );
   }
