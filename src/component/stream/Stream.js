@@ -1,17 +1,17 @@
 import React, {Component} from "react";
 import SimpleCRUD from "../simpleEntity/SimpleCRUD";
 
-class AcademicRank extends Component {
+class Stream extends Component {
   render() {
     return (
       <SimpleCRUD
         location={this.props.location}
         history={this.props.history}
-        url="academicRank"
-        buttonName="Добавить степень"
+        url="streams"
+        buttonName="Добавить поток"
       />
     );
   }
 }
 
-export default AcademicRank;
+export default Stream;
