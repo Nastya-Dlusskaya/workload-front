@@ -8,7 +8,7 @@ class Stream extends Component {
         location={this.props.location}
         history={this.props.history}
         url="streams"
-        buttonName="Добавить поток"
+        buttonName="поток"
       />
     );
   }

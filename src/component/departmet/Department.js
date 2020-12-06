@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import axios from "axios/index";
-import {BACK_END_SERVER_URL} from "../../context";
+import {BACK_END_SERVER_URL, getPopupTitle, LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN} from "../../context";
 import {Button, Dropdown, Form, Modal, Table} from "semantic-ui-react";
 import Pagin from "../simpleEntity/Pagin";
 
@@ -49,14 +49,14 @@ class Department extends Component {
             });
     };
 
-    addSubject = () => {
+    add = () => {
         let url = this.state.id ? "/departments/" + this.state.id : "/departments";
         let method = this.state.id ? "put" : "post";
         axios({
             method: method,
             url: BACK_END_SERVER_URL + url,
             headers: {
-                //  'Authorization': 'Bearer  ' + localStorage.getItem(LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN),
+                'Authorization': 'Bearer  ' + localStorage.getItem(LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN),
                 "Content-type": "application/json",
             },
             data: {
@@ -97,7 +97,7 @@ class Department extends Component {
         axios
             .delete(BACK_END_SERVER_URL + `/departments/${id}`, {
                 headers: {
-                    //'Authorization': 'Bearer  ' + localStorage.getItem(LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN),
+                    'Authorization': 'Bearer  ' + localStorage.getItem(LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN),
                 },
             })
             .then((res) => {
@@ -111,13 +111,11 @@ class Department extends Component {
             });
     };
 
-    handleChangeName = (event, {value}) => {
-        this.setState({departmentName: value});
-    };
-
-    handleChangeFaculty = (event, {value}) => {
-        this.setState({facultyId: value});
-    };
+    handleChange = (event, {name, value}) => {
+        if (this.state.hasOwnProperty(name)) {
+            this.setState({[name]: value});
+        }
+    }
 
     render() {
         return (
@@ -137,41 +135,56 @@ class Department extends Component {
                         open={this.state.open}
                         trigger={<Button>Добавить кафедру</Button>}
                     >
-                        <Modal.Header>Добавить кафедру</Modal.Header>
+                        <Modal.Header>{getPopupTitle(this.state.id) + " факультет"}</Modal.Header>
                         <Modal.Content>
                             <Modal.Description>
-                                <Form>
+                                <Form ref="form" onSubmit={this.add}>
                                     <Form.Input
                                         fluid
+                                        name="departmentName"
                                         label="Название"
                                         placeholder="Название"
-                                        onChange={this.handleChangeName}
+                                        onChange={this.handleChange}
                                         value={this.state.departmentName}
+                                        validators={[
+                                            "required",
+                                            "minStringLength:2",
+                                            "maxStringLength:60",
+                                        ]}
+                                        errorMessages={[
+                                            "Данное поле является обязательным для заполнения",
+                                            "Минимальная длинна 2 символа",
+                                            "Максимальная длинна 60 символов",
+                                        ]}
                                     />
                                     <Form.Dropdown
                                         fluid
                                         search
                                         selection
+                                        name="facultyId"
                                         label="Факультет"
                                         options={this.state.faculties}
                                         defaultValue={this.state.facultyId}
-                                        onChange={this.handleChangeFaculty}
+                                        onChange={this.handleChange}
                                         placeholder="Факультет"
+                                        validators={[
+                                            "required",
+                                        ]}
+                                        errorMessages={[
+                                            "Данное поле является обязательным для заполнения",
+                                        ]}
+                                    />
+                                    <Button
+                                        content={this.state.id ? "Обновить" : "Сохранить"}
+                                    />
+                                    <Button
+                                        content="Отменить"
+                                        onClick={() => this.setState({open: false})}
+                                        secondary
                                     />
                                 </Form>
                             </Modal.Description>
                         </Modal.Content>
-                        <Modal.Actions>
-                            <Button
-                                content={this.state.id ? "Обновить" : "Сохранить"}
-                                onClick={this.addSubject}
-                            />
-                            <Button
-                                content="Отменить"
-                                onClick={() => this.setState({open: false})}
-                                secondary
-                            />
-                        </Modal.Actions>
                     </Modal>
                 </div>
 
@@ -183,12 +196,11 @@ class Department extends Component {
                             <Table.HeaderCell>Факультет</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
-
                     <Table.Body>
                         {Object.values(this.state.departments).map((dep) => {
                             return (
                                 <Table.Row key={dep.id}>
-                                    <Table.Cell width={1}>
+                                    <Table.Cell style={{width:7}}>
                                         <Dropdown icon="ellipsis horizontal">
                                             <Dropdown.Menu>
                                                 <Dropdown.Item text="Редактировать" onClick={() => this.onUpdate(dep)}/>

@@ -1,20 +1,30 @@
 import React, {Component} from "react";
 import axios from "axios/index";
-import {BACK_END_SERVER_URL, LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN,} from "../../context";
-import {Button, Dropdown, Form, Modal, Table} from "semantic-ui-react";
+import {BACK_END_SERVER_URL, getPopupTitle, LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN,} from "../../context";
+import {Button, Dropdown, Form, Modal, Radio, Table} from "semantic-ui-react";
 import Pagin from "../simpleEntity/Pagin";
+import RadioButtons from "./RadioButtons";
 
 class Lecturer extends Component {
     state = {
         lecturers: [],
         degrees: [],
         ranks: [],
+        positions: [],
         lecturerSurname: "",
         lecturerName: "",
         lecturerPatronymic: "",
         lecturerEmail: "",
+        lecturerSkype: "",
+        lecturerMobilePhone: "",
+        lecturerHomePhone: "",
+        lecturerWorkPhone: "",
+        lecturerStaff: false,
+        lecturerBudget: false,
+        lecturerHourPaid: false,
         rankId: null,
         degreeId: null,
+        positionId: null,
         id: null,
         open: false,
 
@@ -38,6 +48,7 @@ class Lecturer extends Component {
     componentDidMount() {
         this.loadDegrees();
         this.loadRanks();
+        this.loadPositions();
     }
 
     loadDegrees = () => {
@@ -70,15 +81,30 @@ class Lecturer extends Component {
             });
     };
 
-    addSubject = () => {
+    loadPositions = () => {
+        axios
+            .get(BACK_END_SERVER_URL + `/positions`)
+            .then((res) => {
+                let array = [];
+                res.data.map((f) =>
+                    array.push({key: f.id, text: f.name, value: f.id})
+                );
+                this.setState({positions: array});
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    };
+
+    add = () => {
+        console.log(this.state.lecturerStaff);
         let url = this.state.id ? "/lecturers/" + this.state.id : "/lecturers";
         let method = this.state.id ? "put" : "post";
         axios({
             method: method,
             url: BACK_END_SERVER_URL + url,
             headers: {
-                Authorization:
-                    "Bearer  " + localStorage.getItem(LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN),
+                'Authorization': "Bearer  " + localStorage.getItem(LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN),
                 "Content-type": "application/json",
             },
             data: {
@@ -86,11 +112,21 @@ class Lecturer extends Component {
                 name: this.state.lecturerName,
                 patronymic: this.state.lecturerPatronymic,
                 email: this.state.lecturerEmail,
+                skype: this.state.lecturerSkype,
+                mobilePhone: this.state.lecturerMobilePhone,
+                homePhone: this.state.lecturerHomePhone,
+                workPhone: this.state.lecturerWorkPhone,
+                staff: this.state.lecturerStaff,
+                budget: this.state.lecturerBudget,
+                hourPaid: this.state.lecturerHourPaid,
                 academicDegree: {
                     id: this.state.degreeId,
                 },
                 academicRank: {
                     id: this.state.rankId,
+                },
+                position: {
+                    id: this.state.positionId,
                 },
             },
         })
@@ -107,8 +143,16 @@ class Lecturer extends Component {
                     lecturerSurname: "",
                     lecturerPatronymic: "",
                     lecturerEmail: "",
+                    lecturerSkype: "",
+                    lecturerHomePhone: "",
+                    lecturerWorkPhone: "",
+                    lecturerMobilePhone: "",
+                    lecturerStaff: false,
+                    lecturerBudget: false,
+                    lecturerHourPaid: "",
                     degreeId: null,
                     rankId: null,
+                    positionId: null,
                 });
             })
             .catch(({response}) => {
@@ -133,8 +177,7 @@ class Lecturer extends Component {
         axios
             .delete(BACK_END_SERVER_URL + `/lecturers/${id}`, {
                 headers: {
-                    Authorization:
-                        "Bearer  " +
+                    'Authorization': "Bearer  " +
                         localStorage.getItem(LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN),
                 },
             })
@@ -149,159 +192,315 @@ class Lecturer extends Component {
             });
     };
 
-    handleChangeSurname = (event, {value}) => {
-        this.setState({lecturerSurname: value});
-    };
-
-    handleChangeName = (event, {value}) => {
-        this.setState({lecturerName: value});
-    };
-
-    handleChangePatronymic = (event, {value}) => {
-        this.setState({lecturerPatronymic: value});
-    };
-
-    handleChangeEmail = (event, {value}) => {
-        this.setState({lecturerEmail: value});
-    };
-
-    handleChangeRank = (event, {value}) => {
-        this.setState({rankId: value});
-    };
-
-    handleChangeDegree = (event, {value}) => {
-        this.setState({degreeId: value});
-    };
+    handleChange = (event, {name, value}) => {
+        if (this.state.hasOwnProperty(name)) {
+            this.setState({[name]: value});
+        }
+    }
 
     render() {
         return (
             <div
                 style={{
-                display: "flex",
-                flexDirection: "column",
-                minWidth: "500px",
-                maxWidth: "1300px",
-                width: "100%",
-                margin: "10px auto",
-            }}
+                    display: "flex",
+                    flexDirection: "column",
+                    minWidth: "500px",
+                    maxWidth: "1300px",
+                    width: "100%",
+                    margin: "10px auto",
+                }}
             >
                 <div style={{alignSelf: "flex-end"}}>
                     <Modal
                         onClose={() => this.setState({open: false})}
                         onOpen={() => this.setState({open: true, id: null})}
                         open={this.state.open}
-                        trigger={<Button>Добавить факультет</Button>}
+                        trigger={<Button>Добавить преподавателя</Button>}
                     >
-                        <Modal.Header>Добавить факультет</Modal.Header>
+                        <Modal.Header>{getPopupTitle(this.state.id) + ' преподавателя'}</Modal.Header>
                         <Modal.Content>
                             <Modal.Description>
-                                <Form>
-                                    <Form.Input
-                                        fluid
-                                        label="Фамилия"
-                                        placeholder="Фамилия"
-                                        onChange={this.handleChangeSurname}
-                                        value={this.state.lecturerSurname}
+                                <Form ref="form" onSubmit={this.add}>
+                                    <Form.Group widths='equal'>
+                                        <Form.Input
+                                            fluid
+                                            name='lecturerSurname'
+                                            label="Фамилия"
+                                            placeholder="Фамилия"
+                                            onChange={this.handleChange}
+                                            value={this.state.lecturerSurname}
+                                            validators={[
+                                                "required",
+                                                "minStringLength:2",
+                                                "maxStringLength:60",
+                                            ]}
+                                            errorMessages={[
+                                                "Данное поле является обязательным для заполнения",
+                                                "Минимальная длинна 2 символа",
+                                                "Максимальная длинна 60 символов",
+                                            ]}
+                                        />
+                                        <Form.Input
+                                            fluid
+                                            label="Имя"
+                                            placeholder="Имя"
+                                            onChange={this.handleChange}
+                                            value={this.state.lecturerName}
+                                            validators={[
+                                                "required",
+                                                "minStringLength:2",
+                                                "maxStringLength:60",
+                                            ]}
+                                            errorMessages={[
+                                                "Данное поле является обязательным для заполнения",
+                                                "Минимальная длинна 2 символа",
+                                                "Максимальная длинна 60 символов",
+                                            ]}
+                                        />
+                                        <Form.Input
+                                            fluid
+                                            name="lecturerPatronymic"
+                                            label="Отчество"
+                                            placeholder="Отчество"
+                                            onChange={this.handleChange}
+                                            value={this.state.lecturerPatronymic}
+                                            validators={[
+                                                "required",
+                                                "minStringLength:2",
+                                                "maxStringLength:60",
+                                            ]}
+                                            errorMessages={[
+                                                "Данное поле является обязательным для заполнения",
+                                                "Минимальная длинна 2 символа",
+                                                "Максимальная длинна 60 символов",
+                                            ]}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group widths='equal'>
+                                        <Form.Dropdown
+                                            fluid
+                                            search
+                                            selection
+                                            name="rankId"
+                                            label="Ученое звание"
+                                            options={this.state.ranks}
+                                            defaultValue={this.state.rankId}
+                                            onChange={this.handleChange}
+                                            placeholder="Ученое звание"
+                                        />
+                                        <Form.Dropdown
+                                            fluid
+                                            search
+                                            selection
+                                            name="rankId"
+                                            label="Ученая степень"
+                                            options={this.state.ranks}
+                                            defaultValue={this.state.rankId}
+                                            onChange={this.handleChange}
+                                            placeholder="Ученая степень"
+                                        />
+                                        <Form.Dropdown
+                                            fluid
+                                            search
+                                            selection
+                                            name="positionId"
+                                            label="Должность"
+                                            options={this.state.positions}
+                                            defaultValue={this.state.positionId}
+                                            onChange={this.handleChange}
+                                            placeholder="Должность"
+                                            validators={[
+                                                "required",
+                                            ]}
+                                            errorMessages={[
+                                                "Данное поле является обязательным для заполнения",
+                                            ]}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group widths="equal">
+                                        <Form.Input
+                                            fluid
+                                            name="lecturerEmail"
+                                            label="Email"
+                                            placeholder="Email"
+                                            onChange={this.handleChange}
+                                            value={this.state.lecturerEmail}
+                                            validators={[
+                                                "required",
+                                                "minStringLength:2",
+                                                "maxStringLength:60",
+                                                "isEmail",
+                                            ]}
+                                            errorMessages={[
+                                                "Данное поле является обязательным для заполнения",
+                                                "Минимальная длинна 2 символа",
+                                                "Максимальная длинна 60 символов",
+                                                "Это не почта",
+                                            ]}
+                                        />
+                                        <Form.Input
+                                            fluid
+                                            name="lecturerSkype"
+                                            label="Skype"
+                                            placeholder="Skype"
+                                            onChange={this.handleChange}
+                                            value={this.state.lecturerSkype}
+                                            validators={[
+                                                "required",
+                                                "minStringLength:2",
+                                                "maxStringLength:60",
+                                            ]}
+                                            errorMessages={[
+                                                "Данное поле является обязательным для заполнения",
+                                                "Минимальная длинна 2 символа",
+                                                "Максимальная длинна 60 символов",
+                                            ]}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group widths='equal'>
+                                        <Form.Input
+                                            fluid
+                                            name="lecturerMobilePhone"
+                                            label="Мобильный телефон"
+                                            placeholder="Мобильный телефон"
+                                            onChange={this.handleChange}
+                                            value={this.state.lecturerMobilePhone}
+                                            validators={[
+                                                "required",
+                                                "minStringLength:13",
+                                                "maxStringLength:14",
+                                            ]}
+                                            errorMessages={[
+                                                "Данное поле является обязательным для заполнения",
+                                                "Минимальная длинна 13 символа",
+                                                "Максимальная длинна 14 символов",
+                                            ]}
+                                        />
+                                        <Form.Input
+                                            fluid
+                                            name="lecturerHomePhone"
+                                            label="Домашний телефон"
+                                            placeholder="Домашний телефон"
+                                            onChange={this.handleChange}
+                                            value={this.state.lecturerHomePhone}
+                                            validators={[
+                                                "required",
+                                                "minStringLength:13",
+                                                "maxStringLength:14",
+                                            ]}
+                                            errorMessages={[
+                                                "Данное поле является обязательным для заполнения",
+                                                "Минимальная длинна 13 символа",
+                                                "Максимальная длинна 14 символов",
+                                            ]}
+                                        />
+                                        <Form.Input
+                                            fluid
+                                            name="lecturerWorkPhone"
+                                            label="Рабочий телефон"
+                                            placeholder="Рабочий телефон"
+                                            onChange={this.handleChange}
+                                            value={this.state.lecturerWorkPhone}
+                                            validators={[
+                                                "required",
+                                                "minStringLength:13",
+                                                "maxStringLength:14",
+                                            ]}
+                                            errorMessages={[
+                                                "Данное поле является обязательным для заполнения",
+                                                "Минимальная длинна 13 символа",
+                                                "Максимальная длинна 14 символов",
+                                            ]}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group widths={"equal"}>
+                                        <RadioButtons
+                                            setValue={(result) => this.state.lecturerStaff = result}
+                                        list = {
+                                            [{
+                                            name: "lecturerStaff",
+                                            label: "Штатный",
+                                            value: "true"
+                                        },
+                                        {
+                                            name: "lecturerStaff",
+                                            label: "Совместитель",
+                                            value: "false",
+                                            def: true
+
+                                        }]
+                                        }
+                                        />
+                                        {/*<Form.Group grouped>*/}
+                                        {/*    <Form.Field name="lecturerStaff" label="Штатный" control={Radio} value="true" checked={this.state.lecturerStaff === true} onChange={this.handleChange}/>*/}
+                                        {/*    <Form.Field name="lecturerStaff" label="Совместитель" control={Radio} value="false" checked={this.state.lecturerStaff === false} onChange={this.handleChange}/>*/}
+                                        {/*</Form.Group>*/}
+                                        <Form.Group grouped>
+                                            <Form.Field name="lecturerBudget" label="Бюджет" control={Radio} value="true" checked={this.state.lecturerBudget === true} onChange={this.handleChange}/>
+                                            <Form.Field name="lecturerBudget" label="Не бюджет" control={Radio} value="false" checked={this.state.lecturerBudget === false} onChange={this.handleChange}/>
+                                        </Form.Group>
+                                        <Form.Group grouped>
+                                            <Form.Field name="lecturerHourPaid" label="Почасовик" control={Radio} value="true" checked={this.state.lecturerHourPaid === true} onChange={this.handleChange}/>
+                                            <Form.Field name="lecturerHourPaid" label="Ставка" control={Radio} value="false" checked={this.state.lecturerHourPaid === false} onChange={this.handleChange}/>
+                                        </Form.Group>
+                                    </Form.Group>
+                                    <Button
+                                        content={this.state.id ? "Обновить" : "Сохранить"}
                                     />
-                                    <Form.Input
-                                        fluid
-                                        label="Имя"
-                                        placeholder="Имя"
-                                        onChange={this.handleChangeName}
-                                        value={this.state.lecturerName}
-                                    />
-                                    <Form.Input
-                                        fluid
-                                        label="Отчество"
-                                        placeholder="Отчество"
-                                        onChange={this.handleChangePatronymic}
-                                        value={this.state.lecturerPatronymic}
-                                    />
-                                    <Form.Input
-                                        fluid
-                                        label="Email"
-                                        placeholder="Email"
-                                        onChange={this.handleChangeEmail}
-                                        value={this.state.lecturerEmail}
-                                    />
-                                    <Form.Dropdown
-                                        fluid
-                                        search
-                                        selection
-                                        label="Ученое звание"
-                                        options={this.state.degrees}
-                                        defaultValue={this.state.degreeId}
-                                        onChange={this.handleChangeRank}
-                                        placeholder="Ученое звание"
-                                    />
-                                    <Form.Dropdown
-                                        fluid
-                                        search
-                                        selection
-                                        label="Ученая степень"
-                                        options={this.state.ranks}
-                                        defaultValue={this.state.rankId}
-                                        onChange={this.handleChangeDegree}
-                                        placeholder="Ученая степень"
+                                    <Button
+                                        content="Отменить"
+                                        onClick={() => this.setState({open: false})}
+                                        secondary
                                     />
                                 </Form>
                             </Modal.Description>
                         </Modal.Content>
-                        <Modal.Actions>
-                            <Button
-                                content={this.state.id ? "Обновить" : "Сохранить"}
-                                onClick={this.addSubject}
-                            />
-                            <Button
-                                content="Отменить"
-                                onClick={() => this.setState({open: false})}
-                                secondary
-                            />
-                        </Modal.Actions>
                     </Modal>
                 </div>
 
-                <Table celled style={{ alignSelf: "center" }}>
-                        <Table.Header fullWidth>
-                            <Table.Row>
-                                <Table.HeaderCell/>
-                                <Table.HeaderCell>Фамилия</Table.HeaderCell>
-                                <Table.HeaderCell>Имя</Table.HeaderCell>
-                                <Table.HeaderCell>Отчество</Table.HeaderCell>
-                                <Table.HeaderCell>Email</Table.HeaderCell>
-                                <Table.HeaderCell>Ученая степень</Table.HeaderCell>
-                                <Table.HeaderCell>Ученое звание</Table.HeaderCell>
-                            </Table.Row>
-                        </Table.Header>
-                        <Table.Body>
-                            {Object.values(this.state.lecturers).map((lecturer) => {
-                                return (
-                                    <Table.Row key={lecturer.id}>
-                                        <Table.Cell width={1}>
+                <Table celled style={{alignSelf: "center"}}>
+                    <Table.Header fullWidth>
+                        <Table.Row>
+                            <Table.HeaderCell/>
+                            <Table.HeaderCell>Фамилия</Table.HeaderCell>
+                            <Table.HeaderCell>Имя</Table.HeaderCell>
+                            <Table.HeaderCell>Отчество</Table.HeaderCell>
+                            <Table.HeaderCell>Email</Table.HeaderCell>
+                            <Table.HeaderCell>Ученая степень</Table.HeaderCell>
+                            <Table.HeaderCell>Ученое звание</Table.HeaderCell>
+                        </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                        {Object.values(this.state.lecturers).map((lecturer) => {
+                            return (
+                                <Table.Row key={lecturer.id}>
+                                    <Table.Cell style={{width: 7}}>
                                         <Dropdown icon="ellipsis horizontal">
                                             <Dropdown.Menu>
-                                                <Dropdown.Item text="Редактировать" onClick={() => this.onUpdate(lecturer)}/>
-                                                <Dropdown.Item text="Удалить" onClick={() => this.onRemove(lecturer.id)}/>
+                                                <Dropdown.Item text="Редактировать"
+                                                               onClick={() => this.onUpdate(lecturer)}/>
+                                                <Dropdown.Item text="Удалить"
+                                                               onClick={() => this.onRemove(lecturer.id)}/>
                                             </Dropdown.Menu>
                                         </Dropdown>
-                                        </Table.Cell>
-                                        <Table.Cell>{lecturer.surname}</Table.Cell>
-                                        <Table.Cell>{lecturer.name}</Table.Cell>
-                                        <Table.Cell>{lecturer.patronymic}</Table.Cell>
-                                        <Table.Cell>{lecturer.email}</Table.Cell>
-                                        <Table.Cell>{lecturer.academicDegree.name}</Table.Cell>
-                                        <Table.Cell>{lecturer.academicRank.name}</Table.Cell>
-                                    </Table.Row>
-                                );
-                            })}
-                        </Table.Body>
-                    </Table>
-                    <Pagin
-                        loadList={this.loadList}
-                        location={this.props.location}
-                        totalPages={this.state.totalPages}
-                        history={this.props.history}
-                    />
+                                    </Table.Cell>
+                                    <Table.Cell>{lecturer.surname}</Table.Cell>
+                                    <Table.Cell>{lecturer.name}</Table.Cell>
+                                    <Table.Cell>{lecturer.patronymic}</Table.Cell>
+                                    <Table.Cell>{lecturer.email}</Table.Cell>
+                                    <Table.Cell>{lecturer.academicDegree.name}</Table.Cell>
+                                    <Table.Cell>{lecturer.academicRank.name}</Table.Cell>
+                                </Table.Row>
+                            );
+                        })}
+                    </Table.Body>
+                </Table>
+                <Pagin
+                    loadList={this.loadList}
+                    location={this.props.location}
+                    totalPages={this.state.totalPages}
+                    history={this.props.history}
+                />
             </div>
         );
     }

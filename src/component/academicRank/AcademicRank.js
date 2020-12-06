@@ -8,7 +8,7 @@ class AcademicRank extends Component {
         location={this.props.location}
         history={this.props.history}
         url="academicRank"
-        buttonName="Добавить степень"
+        buttonName="звание"
       />
     );
   }

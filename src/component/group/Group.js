@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import axios from "axios/index";
-import {BACK_END_SERVER_URL, LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN} from "../../context";
+import {BACK_END_SERVER_URL, getPopupTitle, LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN} from "../../context";
 import {Button, Dropdown, Form, Modal, Table} from "semantic-ui-react";
 import Pagin from "../simpleEntity/Pagin";
 
@@ -68,7 +68,7 @@ class Group extends Component {
             });
     };
 
-    addSubject = () => {
+    add = () => {
         let url = this.state.id ? "/groups/" + this.state.id : "/groups";
         let method = this.state.id ? "put" : "post";
         axios({
@@ -124,7 +124,7 @@ class Group extends Component {
         axios
             .delete(BACK_END_SERVER_URL + `/groups/${id}`, {
                 headers: {
-                    //'Authorization': 'Bearer  ' + localStorage.getItem(LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN),
+                    'Authorization': 'Bearer  ' + localStorage.getItem(LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN),
                 },
             })
             .then((res) => {
@@ -138,21 +138,11 @@ class Group extends Component {
             });
     };
 
-    handleChangeName = (event, {value}) => {
-        this.setState({groupName: value});
-    };
-
-    handleChangeStudentCount = (event, {value}) => {
-        this.setState({studentCount: value});
-    };
-
-    handleChangeSpeciality = (event, {value}) => {
-        this.setState({specialityId: value});
-    };
-
-    handleChangeStream = (event, {value}) => {
-        this.setState({streamId: value});
-    };
+    handleChange = (event, {name, value}) => {
+        if (this.state.hasOwnProperty(name)) {
+            this.setState({[name]: value});
+        }
+    }
 
     render() {
         return (
@@ -173,61 +163,94 @@ class Group extends Component {
                         open={this.state.open}
                         trigger={<Button>Добавить группу</Button>}
                     >
-                        <Modal.Header>Добавить группу</Modal.Header>
+                        <Modal.Header>{getPopupTitle(this.state.id) + " группу"}</Modal.Header>
                         <Modal.Content>
                             <Modal.Description>
-                                <Form>
+                                <Form ref="form" onSubmit={this.add}>
                                     <Form.Input
                                         fluid
+                                        name="groupName"
                                         label="Название"
                                         placeholder="Название"
-                                        onChange={this.handleChangeName}
+                                        onChange={this.handleChange}
                                         value={this.state.groupName}
+                                        validators={[
+                                            "required",
+                                            "minStringLength:2",
+                                            "maxStringLength:60",
+                                        ]}
+                                        errorMessages={[
+                                            "Данное поле является обязательным для заполнения",
+                                            "Минимальная длинна 2 символа",
+                                            "Максимальная длинна 60 символов",
+                                        ]}
                                     />
                                     <Form.Input
                                         fluid
+                                        name="studentCount"
                                         label="Количество студентов"
                                         placeholder="Количество студентов"
-                                        onChange={this.handleChangeStudentCount}
+                                        onChange={this.handleChange}
                                         value={this.state.studentCount}
                                         type="number"
                                         min="1"
                                         max="50"
+                                        validators={[
+                                            "required",
+                                            "minNumber:1",
+                                            "maxNumber:50",
+                                        ]}
+                                        errorMessages={[
+                                            "Данное поле является обязательным для заполнения",
+                                            "Минимальное количество - 1 человек",
+                                            "Максимальное количество - 50 символов",
+                                        ]}
                                     />
                                     <Form.Dropdown
                                         fluid
                                         search
                                         selection
+                                        name="specialityId"
                                         label="Специальность"
                                         options={this.state.specialities}
                                         defaultValue={this.state.specialityId}
-                                        onChange={this.handleChangeSpeciality}
+                                        onChange={this.handleChange}
                                         placeholder="Специальность"
+                                        validators={[
+                                            "required",
+                                        ]}
+                                        errorMessages={[
+                                            "Данное поле является обязательным для заполнения",
+                                        ]}
                                     />
                                     <Form.Dropdown
                                         fluid
                                         search
                                         selection
+                                        name="streamId"
                                         label="Поток"
                                         options={this.state.streams}
                                         defaultValue={this.state.streamId}
-                                        onChange={this.handleChangeStream}
+                                        onChange={this.handleChange}
                                         placeholder="Поток"
+                                        validators={[
+                                            "required",
+                                        ]}
+                                        errorMessages={[
+                                            "Данное поле является обязательным для заполнения",
+                                        ]}
+                                    />
+                                    <Button
+                                        content={this.state.id ? "Обновить" : "Сохранить"}
+                                    />
+                                    <Button
+                                        content="Отменить"
+                                        onClick={() => this.setState({open: false})}
+                                        secondary
                                     />
                                 </Form>
                             </Modal.Description>
                         </Modal.Content>
-                        <Modal.Actions>
-                            <Button
-                                content={this.state.id ? "Обновить" : "Сохранить"}
-                                onClick={this.addSubject}
-                            />
-                            <Button
-                                content="Отменить"
-                                onClick={() => this.setState({open: false})}
-                                secondary
-                            />
-                        </Modal.Actions>
                     </Modal>
                 </div>
 
@@ -246,7 +269,7 @@ class Group extends Component {
                         {Object.values(this.state.groups).map((dep) => {
                             return (
                                 <Table.Row key={dep.id}>
-                                    <Table.Cell width={1}>
+                                    <Table.Cell style={{width:7}}>
                                         <Dropdown icon="ellipsis horizontal">
                                             <Dropdown.Menu>
                                                 <Dropdown.Item text="Редактировать" onClick={() => this.onUpdate(dep)}/>

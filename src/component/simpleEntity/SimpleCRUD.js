@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import axios from "axios/index";
-import {BACK_END_SERVER_URL, LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN,} from "../../context";
-import {Button, Dropdown, Modal, Table} from "semantic-ui-react";
+import {BACK_END_SERVER_URL, getPopupTitle, LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN,} from "../../context";
+import {Button, Confirm, Dropdown, Modal, Table} from "semantic-ui-react";
 
 import {Form, Input} from "semantic-ui-react-form-validator";
 import Pagin from "./Pagin";
@@ -14,7 +14,8 @@ class SimpleCRUD extends Component {
         list: [],
         name: "",
         id: null,
-        open: false,
+        openAddUpdate: false,
+        openDelete: false,
 
         sizeList: [],
 
@@ -44,8 +45,7 @@ class SimpleCRUD extends Component {
             method: method,
             url: BACK_END_SERVER_URL + url,
             headers: {
-                Authorization:
-                    "Bearer  " + localStorage.getItem(LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN),
+                'Authorization': "Bearer  " + localStorage.getItem(LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN),
                 "Content-type": "application/json",
             },
             data: {
@@ -60,7 +60,7 @@ class SimpleCRUD extends Component {
                     this.state.list.push(res.data);
                 }
                 this.setState({
-                    open: false,
+                    openAddUpdate: false,
                     id: null,
                     name: "",
                 });
@@ -74,11 +74,29 @@ class SimpleCRUD extends Component {
         this.setState({
             id: degree.id,
             name: degree.name,
-            open: true,
+            openAddUpdate: true,
         });
     };
 
-    onRemove = (id) => {
+    onConfirmDelete = (id) => {
+        this.setState(
+            {
+                id: id,
+                openDelete: true
+            }
+        );
+    };
+
+    onConfirmDeleteCancel = () => {
+        this.setState(
+            {
+                openDelete: false,
+            }
+        );
+    }
+
+    onRemove = () => {
+        let id = this.state.id;
         axios
             .delete(BACK_END_SERVER_URL + `/${this.props.url}/${id}`, {
                 headers: {
@@ -92,6 +110,7 @@ class SimpleCRUD extends Component {
                     id: null,
                     name: "",
                     list: this.state.list.filter((s) => s.id !== id),
+                    openDelete: false
                 });
             })
             .catch(({response}) => {
@@ -117,15 +136,15 @@ class SimpleCRUD extends Component {
             >
                 <div style={{alignSelf: "flex-end"}}>
                     <Modal
-                        onClose={() => this.setState({open: false})}
-                        onOpen={() => this.setState({open: true, id: null})}
-                        open={this.state.open}
-                        trigger={<Button>{this.props.buttonName}</Button>}
+                        onClose={() => this.setState({openAddUpdate: false})}
+                        onOpen={() => this.setState({openAddUpdate: true, id: null})}
+                        open={this.state.openAddUpdate}
+                        trigger={<Button>{"Добавить " + this.props.buttonName}</Button>}
                     >
+                        <Modal.Header>{ getPopupTitle(this.state.id) + this.props.buttonName}</Modal.Header>
                         <Modal.Content>
                             <Modal.Description>
                                 <Form ref="form" onSubmit={this.add}>
-                                    <Modal.Header>{this.props.buttonName}</Modal.Header>
                                     <Input
                                         type="text"
                                         label="Название"
@@ -148,7 +167,7 @@ class SimpleCRUD extends Component {
                                     />
                                     <Button
                                         content="Отменить"
-                                        onClick={() => this.setState({open: false})}
+                                        onClick={() => this.setState({openAddUpdate: false})}
                                         secondary
                                     />
                                 </Form>
@@ -169,14 +188,18 @@ class SimpleCRUD extends Component {
                         {this.state.list?.map((item) => {
                             return (
                                 <Table.Row key={item.id}>
-                                    <Table.Cell width={1}>
-                                    <Dropdown icon="ellipsis horizontal">
-                                        <Dropdown.Menu>
-                                            <Dropdown.Item text="Редактировать" onClick={() => this.onUpdate(item)}/>
-                                            <Dropdown.Item text="Удалить" onClick={() => this.onRemove(item.id)}/>
-                                        </Dropdown.Menu>
-                                    </Dropdown>
+                                    <Table.Cell style={{width: 7}}>
+                                        <Dropdown icon="ellipsis horizontal">
+                                            <Dropdown.Menu>
+                                                <Dropdown.Item text="Редактировать"
+                                                               onClick={() => this.onUpdate(item)}/>
+                                                <Dropdown.Item text="Удалить"
+                                                               onClick={() => this.onConfirmDelete(item.id)}/>
+                                            </Dropdown.Menu>
+                                        </Dropdown>
                                     </Table.Cell>
+                                    <Confirm open={this.state.openDelete} onCancel={() => this.onConfirmDeleteCancel()}
+                                             onConfirm={() => this.onRemove(item.id)}/>
                                     <Table.Cell>{item.name}</Table.Cell>
                                 </Table.Row>
                             );

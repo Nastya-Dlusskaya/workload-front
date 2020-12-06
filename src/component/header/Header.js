@@ -14,6 +14,7 @@ const LECTURERS = "lecturers";
 const GROUPS = "groups";
 const STREAMS = "streams";
 const WORKLOADS = "workloads";
+const POSITIONS = "positions";
 const SIGN_OUT = "signOut";
 
 const links = new Map([
@@ -95,6 +96,14 @@ const links = new Map([
             name: "workloads",
             url: "/workloads",
             value: "Workloads",
+        },
+    ],
+    [
+        POSITIONS,
+        {
+            name: "positions",
+            url: "/positions",
+            value: "Positions",
         },
     ],
     [
@@ -231,6 +240,17 @@ class Header extends Component {
                             onClick={this.handleItemClick}
                         >
                             Потоки
+                        </Menu.Item>
+                    ) : false}
+                    {isHasRole(ROLE_ADMIN) ? (
+                        <Menu.Item
+                            name={links.get(STREAMS).name}
+                            active={this.state.activeItem === links.get(STREAMS).name}
+                            as={Link}
+                            to={links.get(STREAMS).url}
+                            onClick={this.handleItemClick}
+                        >
+                            Должности
                         </Menu.Item>
                     ) : false}
                     {isHasRole(ROLE_LECTURER) ? (

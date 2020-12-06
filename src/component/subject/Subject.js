@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import SimpleCRUD from "../simpleEntity/SimpleCRUD";
 
 class Subject extends Component {
@@ -8,7 +8,7 @@ class Subject extends Component {
         location={this.props.location}
         history={this.props.history}
         url="subjects"
-        buttonName="Добавить Предмет"
+        buttonName="предмет"
       />
     );
   }

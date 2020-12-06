@@ -24,3 +24,7 @@ export let isHasRole = (role) => {
   }
   return false;
 };
+
+export let getPopupTitle = (id) => {
+  return id !== null ? "Обновить " : "Создать ";
+}

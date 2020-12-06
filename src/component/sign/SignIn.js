@@ -173,7 +173,7 @@ class SignIn extends Component {
                     <Grid.Column>
                     </Grid.Column>
                     <Grid.Column>
-                        <Form size='large'>
+                        <Form size='large' ref="form" onSubmit={this.signIn}>
                             <Form.Input
                                 required={true}
                                 icon="user"
@@ -182,6 +182,12 @@ class SignIn extends Component {
                                 placeholder="Email"
                                 value={this.state.username}
                                 onChange={this.changeUsernameHandler}
+                                validators={[
+                                    "required",
+                                ]}
+                                errorMessages={[
+                                    "Данное поле является обязательным для заполнения",
+                                ]}
                             />
                             <Form.Input
                                 required={true}
@@ -192,6 +198,12 @@ class SignIn extends Component {
                                 type="password"
                                 value={this.state.password}
                                 onChange={this.changePasswordHandler}
+                                validators={[
+                                    "required",
+                                ]}
+                                errorMessages={[
+                                    "Данное поле является обязательным для заполнения",
+                                ]}
                             />
                             <Message
                                 error
@@ -201,7 +213,6 @@ class SignIn extends Component {
                                 className="submit"
                                 content="Вход"
                                 fluid
-                                onClick={this.signIn}
                             />
                         </Form>
                     </Grid.Column>

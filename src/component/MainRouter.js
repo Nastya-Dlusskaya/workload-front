@@ -14,6 +14,8 @@ import Lecturer from "./lecturer/Lecturer";
 import Group from "./group/Group";
 import Stream from "./stream/Stream";
 import Workload from "./workload/Workload";
+import Plan from "./plan/Plan";
+import Position from "./position/Position";
 
 class MainRouter extends Component {
   state = {
@@ -56,6 +58,8 @@ class MainRouter extends Component {
             <Route path="/groups" component={Group} />
             <Route path="/streams" component={Stream} />
             <Route path="/workloads" component={Workload} />
+            <Route path="/plans" component={Plan} />
+            <Route path="/positions" component={Position} />
             <Route
               path="/signOut"
               render={() => (
@@ -84,10 +88,10 @@ class Footer extends Component {
           height: "2.5rem",
         }}
       >
-        <p style={{paddingLeft:10}}>
+        <p style={{paddingLeft:10, overflow:"hidden", display:"inline-block", textAlign:'left'}}>
           БНТУ, ФИТР, ПОИСиТ, 2019-2020
         </p>
-        <p style={{paddingRight:10, display: "flex", textAlign:'right'}}>Разработчик: Длусская Анастасия</p>
+        <p style={{paddingRight:10, overflow:"hidden", display:"inline-block", textAlign:'right'}}>Разработчик: Длусская Анастасия</p>
       </footer>
     );
   }

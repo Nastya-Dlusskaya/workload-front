@@ -3,124 +3,19 @@ import axios from "axios/index";
 import {BACK_END_SERVER_URL, getPopupTitle, LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN} from "../../context";
 import {Button, Form, Modal} from "semantic-ui-react";
 
-const workloadType = [
-    {
-        key: 'EDUCATION',
-        text: 'Учебная',
-        value: 'EDUCATION',
-    },
-    {
-        key: 'EDUCATION_METHODICAL',
-        text: 'Учебно-методическая',
-        value: 'EDUCATION_METHODICAL',
-    },
-    {
-        key: 'ORGANIZATIONAL_METHODICAL',
-        text: 'Организационно – методическая',
-        value: 'ORGANIZATIONAL_METHODICAL',
-    },
-    {
-        key: 'SCIENTIFIC_RESEARCH',
-        text: 'Научно – исследовательская',
-        value: 'SCIENTIFIC_RESEARCH',
-    },
-    {
-        key: 'SOCIAL',
-        text: 'Информационно – воспитательная, общественная и идеологическая',
-        value: 'SOCIAL',
-    },
-]
-
-const educationWorkloadType = [
-    {
-        key: 'LECTURE',
-        text: 'Лекции',
-        value: 'LECTURE',
-    },
-    {
-        key: 'PRACTISE',
-        text: 'Практические и семинарские занятия',
-        value: 'PRACTISE',
-    },
-    {
-        key: 'LABORATORY',
-        text: 'Лабораторные занятия',
-        value: 'LABORATORY',
-    },
-    {
-        key: 'COURSEWORK',
-        text: 'Курсовое проектирование',
-        value: 'COURSEWORK',
-    },
-    {
-        key: 'CONSULTATION',
-        text: 'Консультации',
-        value: 'CONSULTATION',
-    },
-    {
-        key: 'SET_OFF',
-        text: 'Зачёт',
-        value: 'SET_OFF',
-    },
-    {
-        key: 'EXAM',
-        text: 'Экзамены',
-        value: 'EXAM',
-    },
-    {
-        key: 'POST_GRADUATE',
-        text: 'Лабораторные занятия',
-        value: 'POST_GRADUATE',
-    },
-    {
-        key: 'DIPLOMA',
-        text: 'Дипломное проектирование',
-        value: 'DIPLOMA',
-    },
-    {
-        key: 'EXAM_COMMITTEE',
-        text: 'ГЭК',
-        value: 'EXAM_COMMITTEE',
-    },
-    {
-        key: 'FIELD_TRIP',
-        text: 'Производственные и учебные практики',
-        value: 'FIELD_TRIP',
-    },
-    {
-        key: 'ATTENDANCE',
-        text: 'Контрольное посещение занятий',
-        value: 'ATTENDANCE',
-    },
-    {
-        key: 'REVIEW',
-        text: 'Рецензирование контрольных работ',
-        value: 'REVIEW',
-    },
-]
-
-class Workload extends Component {
+class Plan extends Component {
     state = {
-        subjects: [],
-        workloadTypeId: "",
-        educationWorkloadTypeId: "",
-        name: "",
-        note: "",
-        subjectId: null,
-        date: null,
-        hours: 0,
-        id: null,
-        open: false,
+        plans: [],
 
         totalPages: 1,
     };
 
     loadList = (params) => {
         axios
-            .get(BACK_END_SERVER_URL + `/departments/page`, {params: params})
+            .get(BACK_END_SERVER_URL + `/plans/page`, {params: params})
             .then((res) => {
                 this.setState({
-                    departments: res.data.content,
+                    plans: res.data.content,
                     totalPages: res.data.totalPages,
                 });
             })
@@ -135,13 +30,13 @@ class Workload extends Component {
 
     loadFaculties = () => {
         axios
-            .get(BACK_END_SERVER_URL + `/faculties`)
+            .get(BACK_END_SERVER_URL + `/plans`)
             .then((res) => {
                 let array = [];
                 res.data.map((f) =>
                     array.push({key: f.id, text: f.name, value: f.id})
                 );
-                this.setState({faculties: array});
+                this.setState({plans: array});
             })
             .catch(function (error) {
                 console.log(error);
@@ -149,7 +44,7 @@ class Workload extends Component {
     };
 
     addSubject = () => {
-        let url = this.state.id ? "/departments/" + this.state.id : "/departments";
+        let url = this.state.id ? "/plans/" + this.state.id : "/plans";
         let method = this.state.id ? "put" : "post";
         axios({
             method: method,
@@ -194,7 +89,7 @@ class Workload extends Component {
 
     onRemove = (id) => {
         axios
-            .delete(BACK_END_SERVER_URL + `/workloads/${id}`, {
+            .delete(BACK_END_SERVER_URL + `/plans/${id}`, {
                 headers: {
                     'Authorization': 'Bearer  ' + localStorage.getItem(LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN),
                 },
@@ -233,24 +128,12 @@ class Workload extends Component {
                         open={this.state.open}
                         trigger={<Button>Добавить нагрузку</Button>}
                     >
-                        <Modal.Header>{ getPopupTitle(this.state.id) + 'нагрузку'}</Modal.Header>
+                        <Modal.Header>{ getPopupTitle(this.state.id) + 'план'}</Modal.Header>
                         <Modal.Content>
                             <Modal.Description>
                                 <Form ref="form" onSubmit={this.add}>
                                     <Modal.Header>Добавить нагрузку</Modal.Header>
-                                    <Form.Dropdown
-                                        fluid
-                                        search
-                                        selection
-                                        name="workloadType"
-                                        label="Тип работ"
-                                        options={workloadType}
-                                        defaultValue={this.state.workloadTypeId}
-                                        validators={['required']}
-                                        errorMessages={['Данное поле является обязательным для заполнения']}
-                                        onChange={this.handleChange}
-                                        placeholder="Тип работ"
-                                    />
+
                                     <Form.Input
                                         fluid
                                         name="hours"
@@ -262,12 +145,12 @@ class Workload extends Component {
                                         validators={[
                                             "required",
                                             "minNumber:1",
-                                            "maxNumber:360",
+                                            "maxNumber:200",
                                         ]}
                                         errorMessages={[
                                             "Данное поле является обязательным для заполнения",
                                             "Минимальная длинна 1 символ",
-                                            "Максимальная длинна 360 символов",
+                                            "Максимальная длинна 200 символов",
                                         ]}
                                     />
                                     <Form.Dropdown
@@ -276,7 +159,7 @@ class Workload extends Component {
                                         selection
                                         name="educationWorkloadTypeId"
                                         label="Тип ежедневной нарузки"
-                                        options={educationWorkloadType}
+                                        options={this.state.educationWorkloadType}
                                         defaultValue={this.state.educationWorkloadTypeId}
                                         validators={['required']}
                                         errorMessages={['Данное поле является обязательным для заполнения']}
@@ -296,6 +179,19 @@ class Workload extends Component {
                                         onChange={this.handleChange}
                                         placeholder="Предмет"
                                     />
+                                    <Form.Dropdown
+                                        fluid
+                                        search
+                                        selection
+                                        name="streamId"
+                                        label="Поток"
+                                        options={this.state.streams}
+                                        defaultValue={this.state.streamId}
+                                        validators={['required']}
+                                        errorMessages={['Данное поле является обязательным для заполнения']}
+                                        onChange={this.handleChange}
+                                        placeholder="Предмет"
+                                    />
                                     <Form.Input
                                         fluid
                                         name="name"
@@ -306,7 +202,7 @@ class Workload extends Component {
                                     />
                                     <Form.Input
                                         fluid
-                                        name="date"
+                                        name="workDate"
                                         label="Дата проведения"
                                         placeholder="Дата проведения"
                                         onChange={this.handleChange}
@@ -343,7 +239,6 @@ class Workload extends Component {
                                     />
                                     <Button
                                         content={this.state.id ? "Обновить" : "Сохранить"}
-
                                         primary
                                     />
                                 </Form>
@@ -394,4 +289,4 @@ class Workload extends Component {
     }
 }
 
-export default Workload;
+export default Plan;

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import SimpleCRUD from "../simpleEntity/SimpleCRUD";
 
 class AcademicDegree extends Component {
@@ -8,7 +8,7 @@ class AcademicDegree extends Component {
         location={this.props.location}
         history={this.props.history}
         url="academicDegree"
-        buttonName="Добавить Степень"
+        buttonName="степень"
       />
     );
   }
