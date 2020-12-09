@@ -1,0 +1,19 @@
+.department {
+  display: flex;
+  flex-direction: column;
+  min-width: 500px;
+  max-width: 1300px;
+  width: 100%;
+  margin: 10px auto;
+}
+
+.departmentModal {
+  .ui.form .twelve.wide.field {
+    width: 100% !important;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

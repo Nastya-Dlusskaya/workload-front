@@ -1,4 +1,4 @@
-export const BACK_END_SERVER_URL = "http://localhost:8888";
+export const BACK_END_SERVER_URL = "https://5e4319d0d406.ngrok.io";
 
 export const LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN = "access_token";
 export const LOCAL_STORAGE_OAUTH2_REFRESH_TOKEN = "refresh_token";
@@ -27,4 +27,4 @@ export let isHasRole = (role) => {
 
 export let getPopupTitle = (id) => {
   return id !== null ? "Обновить " : "Создать ";
-}
+};

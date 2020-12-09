@@ -1,11 +1,11 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import {
-    LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN,
-    LOCAL_STORAGE_OAUTH2_REFRESH_TOKEN,
-    LOCAL_STORAGE_USER_DATA,
+  LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN,
+  LOCAL_STORAGE_OAUTH2_REFRESH_TOKEN,
+  LOCAL_STORAGE_USER_DATA,
 } from "../../context";
-import {Container} from "semantic-ui-react";
-import {withRouter} from "react-router";
+import { Container } from "semantic-ui-react";
+import { withRouter } from "react-router";
 
 class SignOut extends Component {
   componentDidMount() {

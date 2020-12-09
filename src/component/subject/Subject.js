@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import SimpleCRUD from "../simpleEntity/SimpleCRUD";
 
 class Subject extends Component {

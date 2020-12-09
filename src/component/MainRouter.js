@@ -1,8 +1,8 @@
-import React, {Component} from "react";
-import {BrowserRouter, Route} from "react-router-dom";
+import React, { Component } from "react";
+import { BrowserRouter, Route } from "react-router-dom";
 import SignIn from "./sign/SignIn";
 import SignOut from "./sign/SignOut";
-import {LOCAL_STORAGE_USER_DATA} from "../context";
+import { LOCAL_STORAGE_USER_DATA } from "../context";
 import Header from "./header/Header.js";
 import Subject from "./subject/Subject";
 import Speciality from "./speciality/Speciality";
@@ -65,8 +65,7 @@ class MainRouter extends Component {
               render={() => (
                 <SignOut changeAuthorizeStatus={this.changeAuthorizeStatus} />
               )}
-            >
-            </Route>
+            ></Route>
           </BrowserRouter>
         </div>
         <Footer />
@@ -88,10 +87,26 @@ class Footer extends Component {
           height: "2.5rem",
         }}
       >
-        <p style={{paddingLeft:10, overflow:"hidden", display:"inline-block", textAlign:'left'}}>
+        <p
+          style={{
+            paddingLeft: 10,
+            overflow: "hidden",
+            display: "inline-block",
+            textAlign: "left",
+          }}
+        >
           БНТУ, ФИТР, ПОИСиТ, 2019-2020
         </p>
-        <p style={{paddingRight:10, overflow:"hidden", display:"inline-block", textAlign:'right'}}>Разработчик: Длусская Анастасия</p>
+        <p
+          style={{
+            paddingRight: 10,
+            overflow: "hidden",
+            display: "inline-block",
+            textAlign: "right",
+          }}
+        >
+          Разработчик: Длусская Анастасия
+        </p>
       </footer>
     );
   }
