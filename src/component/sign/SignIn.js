@@ -11,7 +11,9 @@ import {
     OAUTH2_GRANT_TYPE_REFRESH_TOKEN,
 } from "../../context";
 import axios from "axios";
-import {Button, Form, Grid, Message,} from "semantic-ui-react";
+import {Button, Grid, Message,} from "semantic-ui-react";
+import {Form, Input} from "semantic-ui-react-form-validator";
+
 
 const jwt = require("jsonwebtoken");
 
@@ -173,9 +175,9 @@ class SignIn extends Component {
                     <Grid.Column>
                     </Grid.Column>
                     <Grid.Column>
-                        <Form size='large' ref="form" onSubmit={this.signIn}>
-                            <Form.Input
-                                required={true}
+                        <Form ref="form" onSubmit={this.signIn}>
+                            <Input
+                                id="login"
                                 icon="user"
                                 iconPosition="left"
                                 label="Email"
@@ -189,8 +191,8 @@ class SignIn extends Component {
                                     "Данное поле является обязательным для заполнения",
                                 ]}
                             />
-                            <Form.Input
-                                required={true}
+                            <Input
+                                id="password"
                                 icon="lock"
                                 iconPosition="left"
                                 label="Пароль"

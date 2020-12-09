@@ -15,7 +15,7 @@ class RadioButtons extends Component {
 
     render() {
         return (
-            <Form.Group grouped>
+            <Form.Group grouped class="radiobuttons">
                 {this.props.list?.map((item) => {
                     return (<Form.Field name={item.name} label={item.label} control={Radio} value={item.value}
                                         checked={this.state.value === item.value} onChange={this.handleChange}/>

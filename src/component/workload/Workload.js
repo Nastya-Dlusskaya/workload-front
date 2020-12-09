@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import axios from "axios/index";
 import {BACK_END_SERVER_URL, getPopupTitle, LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN} from "../../context";
-import {Button, Form, Modal} from "semantic-ui-react";
+import {Button, Modal} from "semantic-ui-react";
+import {Dropdown, Form, Input, TextArea} from "semantic-ui-react-form-validator";
 
 const workloadType = [
     {
@@ -237,8 +238,7 @@ class Workload extends Component {
                         <Modal.Content>
                             <Modal.Description>
                                 <Form ref="form" onSubmit={this.add}>
-                                    <Modal.Header>Добавить нагрузку</Modal.Header>
-                                    <Form.Dropdown
+                                    <Dropdown
                                         fluid
                                         search
                                         selection
@@ -251,7 +251,7 @@ class Workload extends Component {
                                         onChange={this.handleChange}
                                         placeholder="Тип работ"
                                     />
-                                    <Form.Input
+                                    <Input
                                         fluid
                                         name="hours"
                                         label="Количество часов"
@@ -270,7 +270,7 @@ class Workload extends Component {
                                             "Максимальная длинна 360 символов",
                                         ]}
                                     />
-                                    <Form.Dropdown
+                                    <Dropdown
                                         fluid
                                         search
                                         selection
@@ -283,7 +283,7 @@ class Workload extends Component {
                                         onChange={this.handleChange}
                                         placeholder="Тип ежедневной нарузки"
                                     />
-                                    <Form.Dropdown
+                                    <Dropdown
                                         fluid
                                         search
                                         selection
@@ -296,7 +296,7 @@ class Workload extends Component {
                                         onChange={this.handleChange}
                                         placeholder="Предмет"
                                     />
-                                    <Form.Input
+                                    <Input
                                         fluid
                                         name="name"
                                         label="Наименование работ"
@@ -304,7 +304,7 @@ class Workload extends Component {
                                         onChange={this.handleChange}
                                         value={this.state.name}
                                     />
-                                    <Form.Input
+                                    <Input
                                         fluid
                                         name="date"
                                         label="Дата проведения"
@@ -313,7 +313,7 @@ class Workload extends Component {
                                         value={this.state.date}
                                         type="date"
                                     />
-                                    <Form.Input
+                                    <Input
                                         fluid
                                         name="startDate"
                                         label="Начало выполнения"
@@ -322,7 +322,7 @@ class Workload extends Component {
                                         value={this.state.date}
                                         type="date"
                                     />
-                                    <Form.Input
+                                    <Input
                                         fluid
                                         name="endDate"
                                         label="Конец выполнения"
@@ -331,7 +331,7 @@ class Workload extends Component {
                                         value={this.state.date}
                                         type="date"
                                     />
-                                    <Form.TextArea
+                                    <TextArea
                                         name='note'
                                         label='Примечание'
                                         placeholder='Примечание'

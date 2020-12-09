@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import axios from "axios/index";
 import {BACK_END_SERVER_URL, getPopupTitle, LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN,} from "../../context";
-import {Button, Dropdown, Form, Modal, Radio, Table} from "semantic-ui-react";
+import {Button, Dropdown as Drop, Modal, Table} from "semantic-ui-react";
+import {Dropdown, Form, Input} from "semantic-ui-react-form-validator";
 import Pagin from "../simpleEntity/Pagin";
 import RadioButtons from "./RadioButtons";
 
@@ -221,8 +222,8 @@ class Lecturer extends Component {
                         <Modal.Content>
                             <Modal.Description>
                                 <Form ref="form" onSubmit={this.add}>
-                                    <Form.Group widths='equal'>
-                                        <Form.Input
+                                    <div class="formGroupRow">
+                                        <Input
                                             fluid
                                             name='lecturerSurname'
                                             label="Фамилия"
@@ -240,7 +241,7 @@ class Lecturer extends Component {
                                                 "Максимальная длинна 60 символов",
                                             ]}
                                         />
-                                        <Form.Input
+                                        <Input
                                             fluid
                                             label="Имя"
                                             placeholder="Имя"
@@ -257,7 +258,7 @@ class Lecturer extends Component {
                                                 "Максимальная длинна 60 символов",
                                             ]}
                                         />
-                                        <Form.Input
+                                        <Input
                                             fluid
                                             name="lecturerPatronymic"
                                             label="Отчество"
@@ -275,9 +276,9 @@ class Lecturer extends Component {
                                                 "Максимальная длинна 60 символов",
                                             ]}
                                         />
-                                    </Form.Group>
-                                    <Form.Group widths='equal'>
-                                        <Form.Dropdown
+                                    </div>
+                                    <div class="formGroupRow">
+                                        <Dropdown
                                             fluid
                                             search
                                             selection
@@ -288,7 +289,7 @@ class Lecturer extends Component {
                                             onChange={this.handleChange}
                                             placeholder="Ученое звание"
                                         />
-                                        <Form.Dropdown
+                                        <Dropdown
                                             fluid
                                             search
                                             selection
@@ -299,7 +300,7 @@ class Lecturer extends Component {
                                             onChange={this.handleChange}
                                             placeholder="Ученая степень"
                                         />
-                                        <Form.Dropdown
+                                        <Dropdown
                                             fluid
                                             search
                                             selection
@@ -316,9 +317,9 @@ class Lecturer extends Component {
                                                 "Данное поле является обязательным для заполнения",
                                             ]}
                                         />
-                                    </Form.Group>
-                                    <Form.Group widths="equal">
-                                        <Form.Input
+                                    </div>
+                                    <div class="formGroupRow">
+                                        <Input
                                             fluid
                                             name="lecturerEmail"
                                             label="Email"
@@ -338,7 +339,7 @@ class Lecturer extends Component {
                                                 "Это не почта",
                                             ]}
                                         />
-                                        <Form.Input
+                                        <Input
                                             fluid
                                             name="lecturerSkype"
                                             label="Skype"
@@ -356,9 +357,9 @@ class Lecturer extends Component {
                                                 "Максимальная длинна 60 символов",
                                             ]}
                                         />
-                                    </Form.Group>
-                                    <Form.Group widths='equal'>
-                                        <Form.Input
+                                    </div>
+                                    <div class="formGroupRow">
+                                        <Input
                                             fluid
                                             name="lecturerMobilePhone"
                                             label="Мобильный телефон"
@@ -376,7 +377,7 @@ class Lecturer extends Component {
                                                 "Максимальная длинна 14 символов",
                                             ]}
                                         />
-                                        <Form.Input
+                                        <Input
                                             fluid
                                             name="lecturerHomePhone"
                                             label="Домашний телефон"
@@ -394,7 +395,7 @@ class Lecturer extends Component {
                                                 "Максимальная длинна 14 символов",
                                             ]}
                                         />
-                                        <Form.Input
+                                        <Input
                                             fluid
                                             name="lecturerWorkPhone"
                                             label="Рабочий телефон"
@@ -412,38 +413,61 @@ class Lecturer extends Component {
                                                 "Максимальная длинна 14 символов",
                                             ]}
                                         />
-                                    </Form.Group>
-                                    <Form.Group widths={"equal"}>
+                                    </div>
+                                    <div class="formGroupRow">
                                         <RadioButtons
                                             setValue={(result) => this.state.lecturerStaff = result}
-                                        list = {
-                                            [{
-                                            name: "lecturerStaff",
-                                            label: "Штатный",
-                                            value: "true"
-                                        },
-                                        {
-                                            name: "lecturerStaff",
-                                            label: "Совместитель",
-                                            value: "false",
-                                            def: true
+                                            list={
+                                                [{
+                                                    name: "lecturerStaff",
+                                                    label: "Штатный",
+                                                    value: "true"
+                                                },
+                                                    {
+                                                        name: "lecturerStaff",
+                                                        label: "Совместитель",
+                                                        value: "false",
+                                                        def: true
 
-                                        }]
-                                        }
+                                                    }
+                                                ]
+                                            }
                                         />
-                                        {/*<Form.Group grouped>*/}
-                                        {/*    <Form.Field name="lecturerStaff" label="Штатный" control={Radio} value="true" checked={this.state.lecturerStaff === true} onChange={this.handleChange}/>*/}
-                                        {/*    <Form.Field name="lecturerStaff" label="Совместитель" control={Radio} value="false" checked={this.state.lecturerStaff === false} onChange={this.handleChange}/>*/}
-                                        {/*</Form.Group>*/}
-                                        <Form.Group grouped>
-                                            <Form.Field name="lecturerBudget" label="Бюджет" control={Radio} value="true" checked={this.state.lecturerBudget === true} onChange={this.handleChange}/>
-                                            <Form.Field name="lecturerBudget" label="Не бюджет" control={Radio} value="false" checked={this.state.lecturerBudget === false} onChange={this.handleChange}/>
-                                        </Form.Group>
-                                        <Form.Group grouped>
-                                            <Form.Field name="lecturerHourPaid" label="Почасовик" control={Radio} value="true" checked={this.state.lecturerHourPaid === true} onChange={this.handleChange}/>
-                                            <Form.Field name="lecturerHourPaid" label="Ставка" control={Radio} value="false" checked={this.state.lecturerHourPaid === false} onChange={this.handleChange}/>
-                                        </Form.Group>
-                                    </Form.Group>
+                                        <RadioButtons
+                                            setValue={(result) => this.state.lecturerBudget = result}
+                                            list={
+                                                [{
+                                                    name: "lecturerBudget",
+                                                    label: "Бюджет",
+                                                    value: "true"
+                                                },
+                                                    {
+                                                        name: "lecturerBudget",
+                                                        label: "Не бюджет",
+                                                        value: "false",
+                                                        def: true
+
+                                                    }]
+                                            }
+                                        />
+                                        <RadioButtons
+                                            setValue={(result) => this.state.lecturerStaff = result}
+                                            list={
+                                                [{
+                                                    name: "lecturerHourPaid",
+                                                    label: "Почасовик",
+                                                    value: "true"
+                                                },
+                                                    {
+                                                        name: "lecturerHourPaid",
+                                                        label: "Ставка",
+                                                        value: "false",
+                                                        def: true
+
+                                                    }]
+                                            }
+                                        />
+                                    </div>
                                     <Button
                                         content={this.state.id ? "Обновить" : "Сохранить"}
                                     />
@@ -466,8 +490,7 @@ class Lecturer extends Component {
                             <Table.HeaderCell>Имя</Table.HeaderCell>
                             <Table.HeaderCell>Отчество</Table.HeaderCell>
                             <Table.HeaderCell>Email</Table.HeaderCell>
-                            <Table.HeaderCell>Ученая степень</Table.HeaderCell>
-                            <Table.HeaderCell>Ученое звание</Table.HeaderCell>
+                            <Table.HeaderCell>Телефон</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
@@ -475,21 +498,20 @@ class Lecturer extends Component {
                             return (
                                 <Table.Row key={lecturer.id}>
                                     <Table.Cell style={{width: 7}}>
-                                        <Dropdown icon="ellipsis horizontal">
-                                            <Dropdown.Menu>
-                                                <Dropdown.Item text="Редактировать"
+                                        <Drop icon="ellipsis horizontal">
+                                            <Drop.Menu>
+                                                <Drop.Item text="Редактировать"
                                                                onClick={() => this.onUpdate(lecturer)}/>
-                                                <Dropdown.Item text="Удалить"
+                                                <Drop.Item text="Удалить"
                                                                onClick={() => this.onRemove(lecturer.id)}/>
-                                            </Dropdown.Menu>
-                                        </Dropdown>
+                                            </Drop.Menu>
+                                        </Drop>
                                     </Table.Cell>
                                     <Table.Cell>{lecturer.surname}</Table.Cell>
                                     <Table.Cell>{lecturer.name}</Table.Cell>
                                     <Table.Cell>{lecturer.patronymic}</Table.Cell>
                                     <Table.Cell>{lecturer.email}</Table.Cell>
-                                    <Table.Cell>{lecturer.academicDegree.name}</Table.Cell>
-                                    <Table.Cell>{lecturer.academicRank.name}</Table.Cell>
+                                    <Table.Cell>{lecturer.mobilePhone}</Table.Cell>
                                 </Table.Row>
                             );
                         })}

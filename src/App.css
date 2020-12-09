@@ -1,5 +1,8 @@
-.App {
-  text-align: center;
+#root {
+  background-image: linear-gradient(rgba(255,255,255,.6), rgba(255,255,255,.6)),url("AdobeStock_310193176.jpeg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .ui.button{
@@ -31,4 +34,28 @@ h2{
 .header{
   font-size: 1.5rem;
   margin-bottom: 15px;
+}
+
+.field{
+  flex: 1 1 auto;
+  margin: 0 .7em !important;
+}
+
+.ui.form .grouped.fields{
+  width: 100%;
+  padding-left: 10px;
+}
+
+.formGroupRow {
+  display: flex;
+  flex-direction: row;
+  margin: 0 -.5em 1em;
+}
+
+.ui.table thead th{
+  text-align: center;
+}
+
+.twelve.wide.field{
+
 }

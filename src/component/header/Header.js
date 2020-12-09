@@ -13,7 +13,7 @@ const DEGREES = "degrees";
 const LECTURERS = "lecturers";
 const GROUPS = "groups";
 const STREAMS = "streams";
-const WORKLOADS = "workloads";
+const PLANS = "plans";
 const POSITIONS = "positions";
 const SIGN_OUT = "signOut";
 
@@ -91,11 +91,11 @@ const links = new Map([
         },
     ],
     [
-        WORKLOADS,
+        PLANS,
         {
-            name: "workloads",
-            url: "/workloads",
-            value: "Workloads",
+            name: "plans",
+            url: "/plans",
+            value: "Plans",
         },
     ],
     [
@@ -119,7 +119,7 @@ const links = new Map([
 class Header extends Component {
     state = {
         activeItem: "home",
-        url: "/",
+        url: "/main",
     };
 
     componentWillMount() {
@@ -244,10 +244,10 @@ class Header extends Component {
                     ) : false}
                     {isHasRole(ROLE_ADMIN) ? (
                         <Menu.Item
-                            name={links.get(STREAMS).name}
-                            active={this.state.activeItem === links.get(STREAMS).name}
+                            name={links.get(POSITIONS).name}
+                            active={this.state.activeItem === links.get(POSITIONS).name}
                             as={Link}
-                            to={links.get(STREAMS).url}
+                            to={links.get(POSITIONS).url}
                             onClick={this.handleItemClick}
                         >
                             Должности
@@ -255,13 +255,13 @@ class Header extends Component {
                     ) : false}
                     {isHasRole(ROLE_LECTURER) ? (
                         <Menu.Item
-                            name={links.get(WORKLOADS).name}
-                            active={this.state.activeItem === links.get(WORKLOADS).name}
+                            name={links.get(PLANS).name}
+                            active={this.state.activeItem === links.get(PLANS).name}
                             as={Link}
-                            to={links.get(WORKLOADS).url}
+                            to={links.get(PLANS).url}
                             onClick={this.handleItemClick}
                         >
-                            Нагрузка
+                            Планы
                         </Menu.Item>
                     ) : false}
                     {isHasRole(ROLE_ADMIN) || isHasRole(ROLE_LECTURER) ? (

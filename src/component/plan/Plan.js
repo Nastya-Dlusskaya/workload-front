@@ -1,11 +1,16 @@
 import React, {Component} from "react";
 import axios from "axios/index";
 import {BACK_END_SERVER_URL, getPopupTitle, LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN} from "../../context";
-import {Button, Form, Modal} from "semantic-ui-react";
+import {Button, Modal} from "semantic-ui-react";
+import {Form, Input} from "semantic-ui-react-form-validator";
 
 class Plan extends Component {
     state = {
         plans: [],
+        name:"",
+        startDate: null,
+        approvedDate: null,
+        endDate: null,
 
         totalPages: 1,
     };
@@ -43,7 +48,7 @@ class Plan extends Component {
             });
     };
 
-    addSubject = () => {
+    add = () => {
         let url = this.state.id ? "/plans/" + this.state.id : "/plans";
         let method = this.state.id ? "put" : "post";
         axios({
@@ -54,7 +59,7 @@ class Plan extends Component {
                 "Content-type": "application/json",
             },
             data: {
-                name: this.state.departmentName,
+                name: this.state.name,
                 faculty: {
                     id: this.state.facultyId,
                 },
@@ -126,120 +131,82 @@ class Plan extends Component {
                         onClose={() => this.setState({open: false})}
                         onOpen={() => this.setState({open: true, id: null})}
                         open={this.state.open}
-                        trigger={<Button>Добавить нагрузку</Button>}
+                        trigger={<Button>Добавить план</Button>}
                     >
                         <Modal.Header>{ getPopupTitle(this.state.id) + 'план'}</Modal.Header>
                         <Modal.Content>
                             <Modal.Description>
                                 <Form ref="form" onSubmit={this.add}>
-                                    <Modal.Header>Добавить нагрузку</Modal.Header>
-
-                                    <Form.Input
+                                    <Input
                                         fluid
-                                        name="hours"
-                                        label="Количество часов"
-                                        placeholder="Количество часов"
+                                        name="name"
+                                        label="Имя"
+                                        placeholder="Имя"
                                         onChange={this.handleChange}
-                                        value={this.state.hours}
-                                        type="number"
+                                        value={this.state.name}
                                         validators={[
                                             "required",
-                                            "minNumber:1",
-                                            "maxNumber:200",
+                                            "minStringLength:9",
+                                            "maxStringLength:10",
                                         ]}
                                         errorMessages={[
                                             "Данное поле является обязательным для заполнения",
-                                            "Минимальная длинна 1 символ",
-                                            "Максимальная длинна 200 символов",
+                                            "Минимальная длинна 9 символов",
+                                            "Максимальная длинна 10 символов",
                                         ]}
                                     />
-                                    <Form.Dropdown
-                                        fluid
-                                        search
-                                        selection
-                                        name="educationWorkloadTypeId"
-                                        label="Тип ежедневной нарузки"
-                                        options={this.state.educationWorkloadType}
-                                        defaultValue={this.state.educationWorkloadTypeId}
-                                        validators={['required']}
-                                        errorMessages={['Данное поле является обязательным для заполнения']}
-                                        onChange={this.handleChange}
-                                        placeholder="Тип ежедневной нарузки"
-                                    />
-                                    <Form.Dropdown
-                                        fluid
-                                        search
-                                        selection
-                                        name="subjectId"
-                                        label="Предмет"
-                                        options={this.state.subjects}
-                                        defaultValue={this.state.subjectId}
-                                        validators={['required']}
-                                        errorMessages={['Данное поле является обязательным для заполнения']}
-                                        onChange={this.handleChange}
-                                        placeholder="Предмет"
-                                    />
-                                    <Form.Dropdown
-                                        fluid
-                                        search
-                                        selection
-                                        name="streamId"
-                                        label="Поток"
-                                        options={this.state.streams}
-                                        defaultValue={this.state.streamId}
-                                        validators={['required']}
-                                        errorMessages={['Данное поле является обязательным для заполнения']}
-                                        onChange={this.handleChange}
-                                        placeholder="Предмет"
-                                    />
-                                    <Form.Input
-                                        fluid
-                                        name="name"
-                                        label="Наименование работ"
-                                        placeholder="Наименование работ"
-                                        onChange={this.handleChange}
-                                        value={this.state.name}
-                                    />
-                                    <Form.Input
-                                        fluid
-                                        name="workDate"
-                                        label="Дата проведения"
-                                        placeholder="Дата проведения"
-                                        onChange={this.handleChange}
-                                        value={this.state.date}
-                                        type="date"
-                                    />
-                                    <Form.Input
+                                    <Input
                                         fluid
                                         name="startDate"
                                         label="Начало выполнения"
                                         placeholder="Начало выполнения"
                                         onChange={this.handleChange}
-                                        value={this.state.date}
+                                        value={this.state.startDate}
                                         type="date"
+                                        validators={[
+                                            "required",
+                                        ]}
+                                        errorMessages={[
+                                            "Данное поле является обязательным для заполнения",
+                                        ]}
                                     />
-                                    <Form.Input
+                                    <Input
                                         fluid
                                         name="endDate"
                                         label="Конец выполнения"
                                         placeholder="Конец выполнения"
                                         onChange={this.handleChange}
-                                        value={this.state.date}
+                                        value={this.state.endDate}
                                         type="date"
+                                        validators={[
+                                            "required",
+                                        ]}
+                                        errorMessages={[
+                                            "Данное поле является обязательным для заполнения",
+                                        ]}
                                     />
-                                    <Form.TextArea
-                                        name='note'
-                                        label='Примечание'
-                                        placeholder='Примечание'
-                                    />
-                                    <Button
-                                        content="Отменить"
-                                        color="black"
-                                        onClick={() => this.setState({open: false})}
+                                    <Input
+                                        fluid
+                                        name="approvedDate"
+                                        label="Дата подписания"
+                                        placeholder="Дата подписания"
+                                        onChange={this.handleChange}
+                                        value={this.state.approvedDate}
+                                        type="date"
+                                        validators={[
+                                            "required",
+                                        ]}
+                                        errorMessages={[
+                                            "Данное поле является обязательным для заполнения",
+                                        ]}
                                     />
                                     <Button
                                         content={this.state.id ? "Обновить" : "Сохранить"}
-                                        primary
+                                    />
+                                    <Button
+                                        content="Отменить"
+                                        onClick={() => this.setState({open: false})}
+                                        secondary
                                     />
                                 </Form>
                             </Modal.Description>

@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import axios from "axios/index";
 import {BACK_END_SERVER_URL, getPopupTitle, LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN} from "../../context";
-import {Button, Dropdown, Form, Modal, Table} from "semantic-ui-react";
+import {Button, Dropdown, Modal, Table} from "semantic-ui-react";
+import {Form, Input} from "semantic-ui-react-form-validator";
 import Pagin from "../simpleEntity/Pagin";
 
 class Department extends Component {
@@ -139,7 +140,7 @@ class Department extends Component {
                         <Modal.Content>
                             <Modal.Description>
                                 <Form ref="form" onSubmit={this.add}>
-                                    <Form.Input
+                                    <Input
                                         fluid
                                         name="departmentName"
                                         label="Название"
@@ -157,7 +158,7 @@ class Department extends Component {
                                             "Максимальная длинна 60 символов",
                                         ]}
                                     />
-                                    <Form.Dropdown
+                                    <Dropdown
                                         fluid
                                         search
                                         selection
