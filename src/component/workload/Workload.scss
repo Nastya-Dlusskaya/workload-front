@@ -1,0 +1,30 @@
+.workload {
+  display: flex;
+  flex-direction: column;
+  min-width: 500px;
+  max-width: 1300px;
+  width: 100%;
+  margin: 10px auto;
+}
+
+.workloadModal {
+  .formGroupRow {
+    display: flex;
+    flex-direction: row;
+    margin: 1em -0.4em 1em;
+
+    .twelve.wide.field {
+      width: 100% !important;
+      margin: 0 0.4em;
+    }
+  }
+
+  .ui.form .twelve.wide.field {
+    width: 100% !important;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

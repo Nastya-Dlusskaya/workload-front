@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { Menu } from "semantic-ui-react";
-import { isHasRole, ROLE_ADMIN, ROLE_LECTURER } from "../../context";
+import React, {Component} from "react";
+import {Link} from "react-router-dom";
+import {Menu} from "semantic-ui-react";
+import {isHasRole, ROLE_ADMIN, ROLE_LECTURER} from "../../context";
 import logo from "../../logo_bntu_2018.svg";
 
 const SUBJECTS = "subjects";
@@ -15,6 +15,7 @@ const GROUPS = "groups";
 const STREAMS = "streams";
 const PLANS = "plans";
 const POSITIONS = "positions";
+const WORKLOADS = "workloads";
 const SIGN_OUT = "signOut";
 
 const links = new Map([
@@ -107,6 +108,14 @@ const links = new Map([
     },
   ],
   [
+    WORKLOADS,
+    {
+      name: "workloads",
+      url: "/workloads",
+      value: "Workloads",
+    },
+  ],
+  [
     SIGN_OUT,
     {
       name: "signOut",
@@ -151,9 +160,7 @@ class Header extends Component {
             >
               Предметы
             </Menu.Item>
-          ) : (
-            false
-          )}
+          ) : false}
           {isHasRole(ROLE_ADMIN) ? (
             <Menu.Item
               name={links.get(SPECIALITIES).name}
@@ -164,9 +171,7 @@ class Header extends Component {
             >
               Специальности
             </Menu.Item>
-          ) : (
-            false
-          )}
+          ) : false}
           {isHasRole(ROLE_ADMIN) ? (
             <Menu.Item
               name={links.get(FACULTIES).name}
@@ -177,9 +182,7 @@ class Header extends Component {
             >
               Факультеты
             </Menu.Item>
-          ) : (
-            false
-          )}
+          ) : false}
           {isHasRole(ROLE_ADMIN) ? (
             <Menu.Item
               name={links.get(DEPARTMENTS).name}
@@ -190,9 +193,7 @@ class Header extends Component {
             >
               Кафедры
             </Menu.Item>
-          ) : (
-            false
-          )}
+          ) : false}
           {isHasRole(ROLE_ADMIN) ? (
             <Menu.Item
               name={links.get(RANKS).name}
@@ -203,9 +204,7 @@ class Header extends Component {
             >
               Ученое звание
             </Menu.Item>
-          ) : (
-            false
-          )}
+          ) : false}
           {isHasRole(ROLE_ADMIN) ? (
             <Menu.Item
               name={links.get(DEGREES).name}
@@ -216,9 +215,7 @@ class Header extends Component {
             >
               Ученая степень
             </Menu.Item>
-          ) : (
-            false
-          )}
+          ) : false}
           {isHasRole(ROLE_ADMIN) ? (
             <Menu.Item
               name={links.get(LECTURERS).name}
@@ -229,9 +226,7 @@ class Header extends Component {
             >
               Преподаватели
             </Menu.Item>
-          ) : (
-            false
-          )}
+          ) : false}
           {isHasRole(ROLE_ADMIN) ? (
             <Menu.Item
               name={links.get(GROUPS).name}
@@ -242,9 +237,7 @@ class Header extends Component {
             >
               Группы
             </Menu.Item>
-          ) : (
-            false
-          )}
+          ) : false}
           {isHasRole(ROLE_ADMIN) ? (
             <Menu.Item
               name={links.get(STREAMS).name}
@@ -255,9 +248,7 @@ class Header extends Component {
             >
               Потоки
             </Menu.Item>
-          ) : (
-            false
-          )}
+          ) : false}
           {isHasRole(ROLE_ADMIN) ? (
             <Menu.Item
               name={links.get(POSITIONS).name}
@@ -268,9 +259,7 @@ class Header extends Component {
             >
               Должности
             </Menu.Item>
-          ) : (
-            false
-          )}
+          ) : false}
           {isHasRole(ROLE_LECTURER) ? (
             <Menu.Item
               name={links.get(PLANS).name}
@@ -281,9 +270,18 @@ class Header extends Component {
             >
               Планы
             </Menu.Item>
-          ) : (
-            false
-          )}
+          ) : false}
+          {isHasRole(ROLE_LECTURER) ? (
+              <Menu.Item
+                  name={links.get(WORKLOADS).name}
+                  active={this.state.activeItem === links.get(WORKLOADS).name}
+                  as={Link}
+                  to={links.get(WORKLOADS).url}
+                  onClick={this.handleItemClick}
+              >
+                Нагрузка
+              </Menu.Item>
+          ) : false}
           {isHasRole(ROLE_ADMIN) || isHasRole(ROLE_LECTURER) ? (
             <Menu.Menu position="right">
               <Menu.Item
@@ -296,9 +294,7 @@ class Header extends Component {
                 Выйти
               </Menu.Item>
             </Menu.Menu>
-          ) : (
-            false
-          )}
+          ) : false}
         </Menu>
       </div>
     );

@@ -1,12 +1,8 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import axios from "axios/index";
-import {
-  BACK_END_SERVER_URL,
-  getPopupTitle,
-  LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN,
-} from "../../context";
-import { Button, Dropdown as Drop, Modal, Table } from "semantic-ui-react";
-import { Form, Input, Dropdown } from "semantic-ui-react-form-validator";
+import {BACK_END_SERVER_URL, getPopupTitle, LOCAL_STORAGE_OAUTH2_ACCESS_TOKEN,} from "../../context";
+import {Button, Dropdown as Drop, Modal, Table} from "semantic-ui-react";
+import {Dropdown, Form, Input} from "semantic-ui-react-form-validator";
 import Pagin from "../simpleEntity/Pagin";
 
 class Group extends Component {
@@ -238,11 +234,16 @@ class Group extends Component {
                   <div className="ui divider"></div>
                   <div className="buttons">
                     <Button
-                      content={this.state.id ? "Обновить" : "Сохранить"}
+                      content={this.state.id ? "Редактировать" : "Сохранить"}
                     />
                     <Button
                       content="Отменить"
-                      onClick={() => this.setState({ open: false })}
+                      onClick={() => this.setState({
+                        open: false,
+                        studentCount: null,
+                        specialityId: null,
+                        streamId: null,
+                        name: "", })}
                       secondary
                     />
                   </div>

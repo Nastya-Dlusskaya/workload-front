@@ -10,7 +10,7 @@
 }
 
 .ui.button {
-  background-color: rgba(1, 110, 69, 0.3);
+  background-color: rgba(1, 110, 69, 0.5);
 }
 
 .ui.button:hover {
@@ -54,3 +54,5 @@ h2 {
 @import "src/component/departmet/Department";
 @import "src/component/group/Group";
 @import "src/component/lecturer/Lecturer";
+@import "src/component/plan/Plan";
+@import "src/component/workload/Workload";
