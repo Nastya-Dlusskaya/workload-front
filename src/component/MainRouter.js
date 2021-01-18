@@ -88,25 +88,8 @@ class Footer extends Component {
                     height: "2.5rem",
                 }}
             >
-                <p
-                    style={{
-                        paddingLeft: 10,
-                        overflow: "hidden",
-                        display: "inline-block",
-                        textAlign: "left",
-                    }}
-                >
-                    БНТУ, ФИТР, ПОИСиТ, 2019-2020
-                </p>
-                <p
-                    style={{
-                        paddingRight: 10,
-                        overflow: "hidden",
-                        display: "inline-block",
-                        textAlign: "right",
-                    }}
-                >
-                    Разработчик: Длусская Анастасия
+                <p>
+                    БНТУ, ФИТР, ПОИСиТ, 2019-2020 © Длусская А.Ю., Сидорик В.В.
                 </p>
             </footer>
         );

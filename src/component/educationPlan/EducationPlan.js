@@ -1,8 +1,13 @@
 import React, {Component} from "react";
 import axios from "axios/index";
 import {BACK_END_SERVER_URL,} from "../../context";
-import {Dropdown, Table} from "semantic-ui-react";
+import {Message, Table} from "semantic-ui-react";
 import queryString from "query-string";
+
+const list = [
+    'Строки с белым фоном - планируемая нагрузка',
+    'Строки с зеленым фоном - выполненная нагрузка'
+]
 
 class EducationPlan extends Component {
     constructor(props) {
@@ -11,6 +16,7 @@ class EducationPlan extends Component {
             planId: props.location.id,
             rows: [],
             plans: [],
+            visible: true,
         }
     }
 
@@ -62,104 +68,83 @@ class EducationPlan extends Component {
         }
     };
 
+    handleDismiss = () => {
+        this.setState({ visible: false }, console.log(this.state.visible))
+    }
+
     render() {
-        console.log(this.state);
         return (
-            <div className="plan">
-                <Dropdown
-                    search
-                    selection
-                    name="planId"
-                    label="План"
-                    options={this.state.plans}
-                    value={this.state.planId}
-                    validators={["required"]}
-                    errorMessages={[
-                        "Данное поле является обязательным для заполнения",
-                    ]}
-                    onChange={this.handleChange}
-                    placeholder="План"
-                />
+            <div className="education-plan">
+                {
+                    this.state.visible ? (<Message
+                    onDismiss={this.handleDismiss}
+                    header='Описание таблицы'
+                    list={list}
+                    /> ): false
+                }
+
                 <Table celled style={{alignSelf: "center"}}>
                     <Table.Header fullWidth>
                         <Table.Row>
-                            <Table.HeaderCell rowSpan={2}>Предмет</Table.HeaderCell>
-                            <Table.HeaderCell colSpan={2}>Лекции</Table.HeaderCell>
-                            <Table.HeaderCell colSpan={2}>Практические</Table.HeaderCell>
-                            <Table.HeaderCell colSpan={2}>Лаб</Table.HeaderCell>
-                            <Table.HeaderCell colSpan={2}>Курсовые</Table.HeaderCell>
-                            <Table.HeaderCell colSpan={2}>Консультации</Table.HeaderCell>
-                            <Table.HeaderCell colSpan={2}>Зачеты</Table.HeaderCell>
-                            <Table.HeaderCell colSpan={2}>Экзамены</Table.HeaderCell>
-                            <Table.HeaderCell colSpan={2}>Аспиранты</Table.HeaderCell>
-                            <Table.HeaderCell colSpan={2}>Диплом</Table.HeaderCell>
-                            <Table.HeaderCell colSpan={2}>ГЭК</Table.HeaderCell>
-                            <Table.HeaderCell colSpan={2}>Практика</Table.HeaderCell>
-                            <Table.HeaderCell colSpan={2}>Посещение</Table.HeaderCell>
-                            <Table.HeaderCell colSpan={2}>Рецензия</Table.HeaderCell>
-                        </Table.Row>
-                        <Table.Row>
-                            <Table.HeaderCell>План</Table.HeaderCell>
-                            <Table.HeaderCell>Текущий</Table.HeaderCell>
-                            <Table.HeaderCell>План</Table.HeaderCell>
-                            <Table.HeaderCell>Текущий</Table.HeaderCell>
-                            <Table.HeaderCell>План</Table.HeaderCell>
-                            <Table.HeaderCell>Текущий</Table.HeaderCell>
-                            <Table.HeaderCell>План</Table.HeaderCell>
-                            <Table.HeaderCell>Текущий</Table.HeaderCell>
-                            <Table.HeaderCell>План</Table.HeaderCell>
-                            <Table.HeaderCell>Текущий</Table.HeaderCell>
-                            <Table.HeaderCell>План</Table.HeaderCell>
-                            <Table.HeaderCell>Текущий</Table.HeaderCell>
-                            <Table.HeaderCell>План</Table.HeaderCell>
-                            <Table.HeaderCell>Текущий</Table.HeaderCell>
-                            <Table.HeaderCell>План</Table.HeaderCell>
-                            <Table.HeaderCell>Текущий</Table.HeaderCell>
-                            <Table.HeaderCell>План</Table.HeaderCell>
-                            <Table.HeaderCell>Текущий</Table.HeaderCell>
-                            <Table.HeaderCell>План</Table.HeaderCell>
-                            <Table.HeaderCell>Текущий</Table.HeaderCell>
-                            <Table.HeaderCell>План</Table.HeaderCell>
-                            <Table.HeaderCell>Текущий</Table.HeaderCell>
-                            <Table.HeaderCell>План</Table.HeaderCell>
-                            <Table.HeaderCell>Текущий</Table.HeaderCell>
-                            <Table.HeaderCell>План</Table.HeaderCell>
-                            <Table.HeaderCell>Текущий</Table.HeaderCell>
+                            <Table.HeaderCell>Предмет</Table.HeaderCell>
+                            <Table.HeaderCell>Лекции</Table.HeaderCell>
+                            <Table.HeaderCell>Практические</Table.HeaderCell>
+                            <Table.HeaderCell>Лаб</Table.HeaderCell>
+                            <Table.HeaderCell>Курсовые</Table.HeaderCell>
+                            <Table.HeaderCell>Консультации</Table.HeaderCell>
+                            <Table.HeaderCell>Зачеты</Table.HeaderCell>
+                            <Table.HeaderCell>Экзамены</Table.HeaderCell>
+                            <Table.HeaderCell>Магистранты</Table.HeaderCell>
+                            <Table.HeaderCell>Аспиранты</Table.HeaderCell>
+                            <Table.HeaderCell>Диплом</Table.HeaderCell>
+                            <Table.HeaderCell>Дипломная практика</Table.HeaderCell>
+                            <Table.HeaderCell>ГЭК</Table.HeaderCell>
+                            <Table.HeaderCell>Практика</Table.HeaderCell>
+                            <Table.HeaderCell>Рецензия</Table.HeaderCell>
+                            <Table.HeaderCell>Всего</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
                         {
                             this.state.rows.map((row) => {
                                 return (
-                                    <Table.Row key={row.id}>
-                                        <Table.Cell>{row.subjectName}</Table.Cell>
+                                    <>
+                                    <Table.Row key={row.id + "expected"}>
+                                        <Table.Cell rowSpan={2}>{row.subjectName}</Table.Cell>
                                         <Table.Cell>{this.getExpectedValue(row, "LECTURE")}</Table.Cell>
-                                        <Table.Cell>{this.getActualValue(row, "LECTURE")}</Table.Cell>
                                         <Table.Cell>{this.getExpectedValue(row, "PRACTISE")}</Table.Cell>
-                                        <Table.Cell>{this.getActualValue(row, "PRACTISE")}</Table.Cell>
                                         <Table.Cell>{this.getExpectedValue(row, "LABORATORY")}</Table.Cell>
-                                        <Table.Cell>{this.getActualValue(row, "LABORATORY")}</Table.Cell>
                                         <Table.Cell>{this.getExpectedValue(row, "COURSEWORK")}</Table.Cell>
-                                        <Table.Cell>{this.getActualValue(row, "COURSEWORK")}</Table.Cell>
                                         <Table.Cell>{this.getExpectedValue(row, "CONSULTATION")}</Table.Cell>
-                                        <Table.Cell>{this.getActualValue(row, "CONSULTATION")}</Table.Cell>
                                         <Table.Cell>{this.getExpectedValue(row, "SET_OFF")}</Table.Cell>
-                                        <Table.Cell>{this.getActualValue(row, "SET_OFF")}</Table.Cell>
                                         <Table.Cell>{this.getExpectedValue(row, "EXAM")}</Table.Cell>
-                                        <Table.Cell>{this.getActualValue(row, "EXAM")}</Table.Cell>
                                         <Table.Cell>{this.getExpectedValue(row, "POST_GRADUATE")}</Table.Cell>
-                                        <Table.Cell>{this.getActualValue(row, "POST_GRADUATE")}</Table.Cell>
+                                        <Table.Cell>{this.getExpectedValue(row, "POST_GRADUATE")}</Table.Cell>
                                         <Table.Cell>{this.getExpectedValue(row, "DIPLOMA")}</Table.Cell>
-                                        <Table.Cell>{this.getActualValue(row, "DIPLOMA")}</Table.Cell>
+                                        <Table.Cell>{this.getExpectedValue(row, "DIPLOMA")}</Table.Cell>
                                         <Table.Cell>{this.getExpectedValue(row, "EXAM_COMMITTEE")}</Table.Cell>
-                                        <Table.Cell>{this.getActualValue(row, "EXAM_COMMITTEE")}</Table.Cell>
                                         <Table.Cell>{this.getExpectedValue(row, "FIELD_TRIP")}</Table.Cell>
-                                        <Table.Cell>{this.getActualValue(row, "FIELD_TRIP")}</Table.Cell>
-                                        <Table.Cell>{this.getExpectedValue(row, "ATTENDANCE")}</Table.Cell>
-                                        <Table.Cell>{this.getActualValue(row, "ATTENDANCE")}</Table.Cell>
                                         <Table.Cell>{this.getExpectedValue(row, "REVIEW")}</Table.Cell>
-                                        <Table.Cell>{this.getActualValue(row, "REVIEW")}</Table.Cell>
+                                        <Table.Cell>{this.getSumExpectedValue(row)}</Table.Cell>
                                     </Table.Row>
+                                    <Table.Row>
+                                        <Table.Cell className="odd">{this.getActualValue(row, "LECTURE")}</Table.Cell>
+                                        <Table.Cell className="odd">{this.getActualValue(row, "PRACTISE")}</Table.Cell>
+                                        <Table.Cell className="odd">{this.getActualValue(row, "LABORATORY")}</Table.Cell>
+                                        <Table.Cell className="odd">{this.getActualValue(row, "COURSEWORK")}</Table.Cell>
+                                        <Table.Cell className="odd">{this.getActualValue(row, "CONSULTATION")}</Table.Cell>
+                                        <Table.Cell className="odd">{this.getActualValue(row, "SET_OFF")}</Table.Cell>
+                                        <Table.Cell className="odd">{this.getActualValue(row, "EXAM")}</Table.Cell>
+                                        <Table.Cell className="odd">{this.getActualValue(row, "POST_GRADUATE")}</Table.Cell>
+                                        <Table.Cell className="odd">{this.getActualValue(row, "POST_GRADUATE")}</Table.Cell>
+                                        <Table.Cell className="odd">{this.getActualValue(row, "DIPLOMA")}</Table.Cell>
+                                        <Table.Cell className="odd">{this.getActualValue(row, "DIPLOMA")}</Table.Cell>
+                                        <Table.Cell className="odd">{this.getActualValue(row, "EXAM_COMMITTEE")}</Table.Cell>
+                                        <Table.Cell className="odd">{this.getActualValue(row, "FIELD_TRIP")}</Table.Cell>
+                                        <Table.Cell className="odd">{this.getActualValue(row, "REVIEW")}</Table.Cell>
+                                        <Table.Cell className="odd">{this.getSumActualValue(row)}</Table.Cell>
+                                    </Table.Row>
+                                    </>
                                 );
                             })}
                     </Table.Body>
@@ -174,6 +159,14 @@ class EducationPlan extends Component {
 
     getActualValue(row, value) {
         return row.items.find((s) => s.name === value)?.actual;
+    }
+
+    getSumExpectedValue(row) {
+        return row.items.map(item => item.expected).reduce((prev, next) => prev + next)
+    }
+
+    getSumActualValue(row) {
+        return row.items.map(item => item.actual).reduce((prev, next) => prev + next)
     }
 }
 

@@ -1,0 +1,27 @@
+.education-plan {
+    display: flex;
+    flex-direction: column;
+    min-width: 500px;
+    max-width: 1300px;
+    width: 100%;
+    margin: 10px auto;
+
+  .formGroupRow {
+    display: flex;
+    flex-direction: row;
+    margin: 1em -0.4em 1em;
+
+    .twelve.wide.field {
+      width: 100% !important;
+      margin: 0 0.4em;
+    }
+  }
+
+  .ui.celled.table tr td:first-child, .ui.celled.table tr th:first-child{
+    border-left: 1px solid rgba(34,36,38,.1)
+  }
+
+  .odd{
+    background-color: rgba(1, 110, 69, 0.1)
+  }
+}

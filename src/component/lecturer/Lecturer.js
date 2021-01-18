@@ -169,8 +169,8 @@ class Lecturer extends Component {
       lecturerName: lecturer.name,
       lecturerPatronymic: lecturer.patronymic,
       lecturerEmail: lecturer.email,
-      degreeId: lecturer.academicDegree.id,
-      rankId: lecturer.academicRank.id,
+      degreeId: lecturer.academicDegree?.id,
+      rankId: lecturer.academicRank?.id,
       open: true,
     });
   };
@@ -239,6 +239,7 @@ class Lecturer extends Component {
                     />
                     <Input
                       fluid
+                      name="lecturerName"
                       label="Имя"
                       placeholder="Имя"
                       onChange={this.handleChange}
@@ -289,10 +290,10 @@ class Lecturer extends Component {
                       fluid
                       search
                       selection
-                      name="rankId"
+                      name="degreeId"
                       label="Ученая степень"
-                      options={this.state.ranks}
-                      defaultValue={this.state.rankId}
+                      options={this.state.degrees}
+                      defaultValue={this.state.degreeId}
                       onChange={this.handleChange}
                       placeholder="Ученая степень"
                     />

@@ -155,7 +155,7 @@ class Workload extends Component {
             name: workload.name,
             note: workload.note,
             resultForm: workload.resultForm,
-            subjectId: workload.subject.id,
+            subjectId: workload.subject?.id,
             startDate: workload.startDate,
             endDate: workload.endDate,
             workDate: workload.workDate,
@@ -440,7 +440,7 @@ class Workload extends Component {
     }
 
     getUiDate(workload) {
-        return workload.workDate ? this.reverseDate(workload.workDate) : this.reverseDate(workload.startDate) + "-" + this.reverseDate(workload.endDate);
+        return workload.workDate ? this.reverseDate(workload.workDate) : workload.startDate? this.reverseDate(workload.startDate) + "-" + this.reverseDate(workload.endDate) : "";
     }
 
     reverseDate(date) {

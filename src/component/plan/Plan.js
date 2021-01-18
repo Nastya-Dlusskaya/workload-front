@@ -149,13 +149,13 @@ class Plan extends Component {
                                         value={this.state.name}
                                         validators={[
                                             "required",
-                                            "minStringLength:9",
-                                            "maxStringLength:10",
+                                            "minStringLength:3",
+                                            "maxStringLength:25",
                                         ]}
                                         errorMessages={[
                                             "Данное поле является обязательным для заполнения",
-                                            "Минимальная длинна 9 символов",
-                                            "Максимальная длинна 10 символов",
+                                            "Минимальная длинна 3 символа",
+                                            "Максимальная длинна 25 символов",
                                         ]}
                                     />
                                     <div class="formGroupRow">
@@ -251,14 +251,14 @@ class Plan extends Component {
                                                            onClick={() => this.onRemove(plan.id)}/>
                                                 <Drop.Item text="Cкачать"
                                                            onClick={() => this.onDownload(plan.id)}/>
-                                                <Drop.Item text="Учебный план" as={Link} to={{pathname: "/education-plan", search:"?planId=" + plan.id}}/>
+                                                <Drop.Item text="Учебный план(работа)/ Выполнение" as={Link} to={{pathname: "/education-plan", search:"?planId=" + plan.id}}/>
                                             </Drop.Menu>
                                         </Drop>
                                     </Table.Cell>
                                     <Table.Cell>{plan.name}</Table.Cell>
-                                    <Table.Cell>{plan.startDate}</Table.Cell>
-                                    <Table.Cell>{plan.endDate}</Table.Cell>
-                                    <Table.Cell>{plan.approvedDate}</Table.Cell>
+                                    <Table.Cell>{this.reverseDate(plan.startDate)}</Table.Cell>
+                                    <Table.Cell>{this.reverseDate(plan.endDate)}</Table.Cell>
+                                    <Table.Cell>{this.reverseDate(plan.approvedDate)}</Table.Cell>
                                 </Table.Row>
                             );
                         })}
@@ -272,6 +272,11 @@ class Plan extends Component {
                 />
             </div>
         );
+    }
+
+    reverseDate(date) {
+        let stringDate = date + '';
+        return stringDate.split('-').reverse().join('-');
     }
 }
 

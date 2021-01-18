@@ -16,6 +16,7 @@ const STREAMS = "streams";
 const PLANS = "plans";
 const POSITIONS = "positions";
 const WORKLOADS = "workloads";
+const EDUCATION_PLAN = "education-plan";
 const SIGN_OUT = "signOut";
 
 const links = new Map([
@@ -113,6 +114,14 @@ const links = new Map([
       name: "workloads",
       url: "/workloads",
       value: "Workloads",
+    },
+  ],
+  [
+    EDUCATION_PLAN,
+    {
+      name: "education-plan",
+      url: "/education-plan",
+      value: "Education-plan",
     },
   ],
   [
@@ -268,7 +277,7 @@ class Header extends Component {
               to={links.get(PLANS).url}
               onClick={this.handleItemClick}
             >
-              Планы
+              Индивидуальные планы
             </Menu.Item>
           ) : false}
           {isHasRole(ROLE_LECTURER) ? (
@@ -280,6 +289,17 @@ class Header extends Component {
                   onClick={this.handleItemClick}
               >
                 Нагрузка
+              </Menu.Item>
+          ) : false}
+          {isHasRole(ROLE_LECTURER) ? (
+              <Menu.Item
+                  name={links.get(EDUCATION_PLAN).name}
+                  active={this.state.activeItem === links.get(EDUCATION_PLAN).name}
+                  as={Link}
+                  to={links.get(EDUCATION_PLAN).url}
+                  onClick={this.handleItemClick}
+              >
+                Учебная работа(план) / Выполнение
               </Menu.Item>
           ) : false}
           {isHasRole(ROLE_ADMIN) || isHasRole(ROLE_LECTURER) ? (
